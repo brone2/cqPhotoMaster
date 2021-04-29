@@ -38,7 +38,6 @@ class mainPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("hello")
     }
     
     @IBAction func didTapBeginPhotoshoot(_ sender: UIButton) {
@@ -62,7 +61,37 @@ class mainPage: UIViewController {
     
     @IBAction func didTapStartPhotos(_ sender: UIButton) {
         
-        performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
+        
+        let alertController = UIAlertController(
+            title: "Validate Wifi Connection",
+            message: "Are you currently connected to a strong Wifi network?",
+            preferredStyle: UIAlertController.Style.alert)
+        
+        let cancelAction = UIAlertAction(
+            title: "No", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+            
+            self.make_alert(title: "Wifi Connection Required", message: "Please connect to Wifi before beginning photoshoot.")
+        }
+        
+        let completeAction = UIAlertAction(
+            title: "Yes", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+     
+            let alert2 = UIAlertController(title: "Instructions", message: "For each product, first scan the barcode. Once the barcode has been saved you will be prompted to photograph the item.", preferredStyle: UIAlertController.Style.alert)
+                
+                alert2.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
+                    //what happens when button is clicked
+                    self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
+                }))
+                
+            self.present(alert2, animated: true, completion: nil)
+
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(completeAction)
+        self.present(alertController, animated: true, completion: nil)
         
     }
     

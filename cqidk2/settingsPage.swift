@@ -6,9 +6,19 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseDatabase
+import MessageUI
 
-class settingsPage: UIViewController {
 
+class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
+
+    var buildingNameEntered:String?
+    var myPastRecieve = [NSDictionary?]()
+    var emailString = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,6 +31,15 @@ class settingsPage: UIViewController {
         self.settingsAlert(title: "Enter New Email", message: "Please enter your new email address", placeHolder: "myNewEmail@gmail.com")
         
     }
+    
+    @IBAction func didTapChangeName(_ sender: UIButton) {
+        
+        self.settingsAlert(title: "Change Name", message: "Please enter your new name", placeHolder: "John Doe")
+        
+        
+    }
+    
+    
     
     @IBAction func didTapSubmitFeedback(_ sender: UIButton) {
         
@@ -41,9 +60,73 @@ class settingsPage: UIViewController {
     
     }
     
-    @IBAction func didTapPhotoRequest(_ sender: UIButton) {
+    override func viewDidAppear(_ animated: Bool) {
+        databaseRef.child("photos").observe(.childAdded) { (snapshot2: DataSnapshot) in
+              
+              let snapshot2 = snapshot2.value as! NSDictionary
+                print("HEEERE")
+                print(snapshot2)
+              let snapRecieveId = snapshot2["myId"] as? String
+             // let snapComplete = snapshot2["isComplete"] as? Bool
+              
+              if(snapRecieveId == loggedInUserId){// && snapComplete == true){
+                  self.myPastRecieve.append(snapshot2)
+              }
+
+          }
+        
+  
         
     }
+    @IBAction func didTapPhotoRequest(_ sender: UIButton) {
+            
+//        databaseRef.child("photos").observe(.childAdded) { (snapshot2: DataSnapshot) in
+//
+//              let snapshot2 = snapshot2.value as! NSDictionary
+//                print("HEEERE")
+//                print(snapshot2)
+//              let snapRecieveId = snapshot2["myId"] as? String
+//             // let snapComplete = snapshot2["isComplete"] as? Bool
+//
+//              if(snapRecieveId == loggedInUserId){// && snapComplete == true){
+//                  self.myPastRecieve.append(snapshot2)
+//              }
+//
+//          }
+        
+        print(self.myPastRecieve)
+        
+        for v in self.myPastRecieve {
+            let photoUrl = v!["photoUrl"] as! String
+            let scannedBarcode = v!["scannedBarcode"] as! String
+            let photoNote = v!["photoNote"] as! String
+            let store = v!["store"] as! String
+            
+            print(emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote)
+            emailString = emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote + "-" + store
+        }
+        print(emailString)
+        
+        
+        
+        //Send Email
+        let composeVC = MFMailComposeViewController()
+        composeVC.mailComposeDelegate = self
+
+        // Configure the fields of the interface.
+        composeVC.setToRecipients([myEmail])
+        composeVC.setSubject("Photoshoot Results")
+        composeVC.setMessageBody(emailString, isHTML: false)
+
+        // Present the view controller modally.
+        self.present(composeVC, animated: true, completion: nil)
+        
+        
+        
+    }
+    
+ 
+
     
     
 func settingsAlert (title: String, message: String, placeHolder:String) {
@@ -63,8 +146,17 @@ func settingsAlert (title: String, message: String, placeHolder:String) {
         title: "Complete", style: UIAlertAction.Style.default) {
         (action) -> Void in
         if let buildingName = buildingNameTextField?.text {
-            //Do nothing
+            self.buildingNameEntered = buildingName.capitalizingFirstLetter()
         }
+        
+        let randomNum:UInt32 = arc4random_uniform(10000)
+        let someString:String = String(randomNum)
+            
+        let childUpdates = ["/inquiry/\(myName)/\(someString)":self.buildingNameEntered!] as [String : Any]
+        databaseRef.updateChildValues(childUpdates)
+            
+            
+            
 
     }
     
@@ -79,5 +171,23 @@ func settingsAlert (title: String, message: String, placeHolder:String) {
     self.present(alertController, animated: true, completion: nil)
 
 }
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }

@@ -13,7 +13,7 @@ import FirebaseStorage
 
 class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
-    var friend_array = ["Galson","barack","mo","Kim"]
+//    var friend_array = ["Galson","barack","mo","Kim"]
     
     var buildingsNearMe = [NSDictionary?]()
     
@@ -50,7 +50,6 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
     //This method says how many rows will be in your table
@@ -105,15 +104,13 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             (action) -> Void in
             if let buildingName = buildingNameTextField?.text {
                 self.buildingNameEntered = buildingName.capitalizingFirstLetter()
+//                self.buildingNameEntered = self.buildingNameEntered?.replacingOccurrences(of: ".",with: "")
             }
             
             myCurrentStore = self.buildingNameEntered!
-//            let key = databaseRef.child("request").childByAutoId().key
-//
-//            let latitude = myLocation?.coordinate.latitude
-//            let longitude = myLocation?.coordinate.longitude
+            let key = databaseRef.child("store").childByAutoId().key!
             
-            let childUpdates = ["/store/\(self.buildingNameEntered!)/store":self.buildingNameEntered!, "/store/\(self.buildingNameEntered!)/created_by":myName,"/store/\(self.buildingNameEntered!)/created_date":todayDate] as [String : Any]
+            let childUpdates = ["/store/\(key)/store":self.buildingNameEntered!,"/store/\(key)/created_by_uid":loggedInUserId, "/store/\(key)/created_by_name":myName,"/store/\(key)/created_date":todayDate] as [String : Any]
             
             print(childUpdates)
             
@@ -176,7 +173,7 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
 
 
 extension UIViewController {
-func make_alert(title: String,message: String){
+    func make_alert(title: String,message: String){
         
     let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         

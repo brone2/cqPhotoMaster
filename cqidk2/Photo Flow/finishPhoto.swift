@@ -138,10 +138,16 @@ class finishPhoto: UIViewController {
         let isDeliItemPath = "/photos/\(key)/isDeliItem"
         let isDeliItemValue = isDeliItem
         
+        let photoKeyPath = "/photos/\(key)/photoKey"
+        let photoKeyValue = key
+        
+        let editedPhotoPath = "/photos/\(key)/editedPhotoUrl"
+        let editedPhotoValue = "na"
+        
         let photoTimestamp = "/photos/\(key)/timestamp"
         
         
-        let childUpdates:Dictionary<String, Any> = [photoTimestamp:[".sv": "timestamp"],photoUrlPath:photoUrlValue,myIdPath:myIdValue,myNamePath:myNameValue,photoDatePath:photoDateValue,photoStorePath:photoStoreValue,photoPhotoshootKeyPath:photoPhotoshootKeyValue,isVariableWeightPath:isVariableWeightValue,rawBarcodePath:rawBarcodeValue,scannedBarcodePath:scannedBarcodeValue,adjustedPluCodePath:adjustedPluCodeValue,pluCodePath:pluCodeValue,pluPricePath:pluPriceValue,photoNotePath:photoNoteValue,isDeliItemPath:isDeliItemValue]
+        let childUpdates:Dictionary<String, Any> = [photoTimestamp:[".sv": "timestamp"],photoUrlPath:photoUrlValue,myIdPath:myIdValue,myNamePath:myNameValue,photoDatePath:photoDateValue,photoStorePath:photoStoreValue,photoPhotoshootKeyPath:photoPhotoshootKeyValue,isVariableWeightPath:isVariableWeightValue,rawBarcodePath:rawBarcodeValue,scannedBarcodePath:scannedBarcodeValue,adjustedPluCodePath:adjustedPluCodeValue,pluCodePath:pluCodeValue,pluPricePath:pluPriceValue,photoNotePath:photoNoteValue,isDeliItemPath:isDeliItemValue,photoKeyPath:photoKeyValue,editedPhotoPath:editedPhotoValue]
         
         databaseRef.updateChildValues(childUpdates)
         

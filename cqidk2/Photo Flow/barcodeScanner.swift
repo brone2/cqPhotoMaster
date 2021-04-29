@@ -8,6 +8,7 @@
 // Code from youtube https://docs.google.com/document/d/126OAOeagyNQROroOqcED3ux8fiBkQWDu0tP1nVYWuUo/edit?usp=sharing
 
 //Note on this page reset all values for the photoshoot to defaults
+//  TODO add note of scan to barcode
 import UIKit
 import AVFoundation
  
@@ -42,7 +43,7 @@ class barcodeScanner: UIViewController {
         
         downloadUrlAbsoluteStringValue = ""
         avCaptureSession = AVCaptureSession()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
                 self.failed()
                 return
