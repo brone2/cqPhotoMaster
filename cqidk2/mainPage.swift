@@ -77,15 +77,17 @@ class mainPage: UIViewController {
         let completeAction = UIAlertAction(
             title: "Yes", style: UIAlertAction.Style.default) {
             (action) -> Void in
+            
+            self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
      
-            let alert2 = UIAlertController(title: "Instructions", message: "For each product, first scan the barcode. Once the barcode has been saved you will be prompted to photograph the item.", preferredStyle: UIAlertController.Style.alert)
-                
-                alert2.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
-                    //what happens when button is clicked
-                    self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
-                }))
-                
-            self.present(alert2, animated: true, completion: nil)
+//            let alert2 = UIAlertController(title: "Instructions", message: "For each product, first scan the barcode. Once the barcode has been saved you will be prompted to photograph the item.", preferredStyle: UIAlertController.Style.alert)
+//                
+//                alert2.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
+//                    //what happens when button is clicked
+//                    self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
+//                }))
+//                
+//            self.present(alert2, animated: true, completion: nil)
 
         }
         

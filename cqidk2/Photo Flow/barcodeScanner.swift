@@ -18,8 +18,43 @@ class barcodeScanner: UIViewController {
     var avCaptureSession: AVCaptureSession!
     var avPreviewLayer: AVCaptureVideoPreviewLayer!
     
+    
     override func viewDidAppear(_ animated: Bool) {
+     
+        //Add text on top of barcode scann begin*********
+//        let circleLayer = CATextLayer()
+//        let radius: CGFloat = 50.0
+//        circleLayer.path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2.0 * radius, height: 2.0 * radius), cornerRadius: radius).cgPath
+//        circleLayer.position = CGPoint(x: 200, y: 200)
+//        circleLayer.fillColor = UIColor.blue.cgColor
+//        view.layer.insertSublayer(circleLayer, above: self.avPreviewLayer)
         
+        
+//        let myTextLayer = CATextLayer()
+//        myTextLayer.string = "My text"
+//        myTextLayer.backgroundColor = UIColor.blue.cgColor
+//        myTextLayer.foregroundColor = UIColor.cyan.cgColor
+//        myTextLayer.frame = view.bounds
+//        view.layer.addSublayer(myTextLayer)
+        
+        let textlayer = CATextLayer()
+
+        textlayer.frame = CGRect(x: view.bounds.midX - 280/2  , y: 80, width: 280, height: 40)
+        textlayer.fontSize = 40
+        textlayer.alignmentMode = .center
+        textlayer.string = "Scan Barcode"
+        textlayer.isWrapped = true
+        textlayer.truncationMode = .end
+        textlayer.backgroundColor = UIColor.clear.cgColor
+        textlayer.foregroundColor = UIColor.green.cgColor
+
+        view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
+        
+        
+        
+        
+        //HHHHHEEERREEREEAdd text on top of barcode scann end*********
+ 
         downloadUrlAbsoluteStringValue = ""
         scannedBarcode = "TBD"
         rawBarcode = "TBD"
@@ -44,7 +79,10 @@ class barcodeScanner: UIViewController {
         downloadUrlAbsoluteStringValue = ""
         avCaptureSession = AVCaptureSession()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+     
+            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video)
+            
+            else {
                 self.failed()
                 return
             }

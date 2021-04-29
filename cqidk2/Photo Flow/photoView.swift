@@ -130,8 +130,22 @@ extension UIScreen {
             
         y = (UIScreen.main.bounds.size.height / 2) - (hw / 2) //Original
 
+//            #Not working iPhone8 Plus
             
 //PHONE SIZES ADJUST Y *********************
+            
+        if isX && screenHeight >= 667.0 { //VALIDATED iPhoneX, iPhone11 Pro
+                    
+            y = ((UIScreen.main.bounds.size.height - padding_height - 28 + 12) / 2) - (hw / 2)
+                    
+        }
+            
+        if isX && screenHeight >= 736.0 { //VALIDATED iPhoneX, iPhone11 Pro
+                
+            y = ((UIScreen.main.bounds.size.height - padding_height - 28 + 8) / 2) - (hw / 2)
+                
+        }
+            
         if isX && screenHeight >= 812.0 { //VALIDATED iPhoneX, iPhone11 Pro
             
             y = ((UIScreen.main.bounds.size.height - padding_height - 28) / 2) - (hw / 2)

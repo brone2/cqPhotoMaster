@@ -83,6 +83,10 @@ class loginPage: UIViewController {
 
     @IBAction func didTapLogin(_ sender: UIButton) {
         
+        if self.nameLabel.text == "" {
+            make_alert(title: "Please Enter Required Info", message: "Please fill out the name, email, and password fields")
+        }  else {
+        
         Auth.auth().signIn(withEmail: self.emailLabel.text!, password: self.passwordLabel.text!, completion: { (user, error) in
             if error != nil{
                 self.errorLabel.text = error?.localizedDescription
@@ -103,19 +107,15 @@ class loginPage: UIViewController {
                     myName = self.loggedInUserData?["myName"] as! String
                     myEmail = self.loggedInUserData?["myEmail"] as! String
                     self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)
-                    
-                    
          
                 }
             }
         })
-        
-        
-        
+
         self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)
         
     }
-    
+    }
     /*
     // MARK: - Navigation
 
