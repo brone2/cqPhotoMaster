@@ -16,7 +16,14 @@ class finishPhoto: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        
+//        self.productImage.layer.cornerRadius = 40
+//        self.productImage.layer.masksToBounds = true
+//        self.productImage.contentMode = .scaleAspectFit
+//        self.productImage.layer.borderWidth = 2.0
+//        self.productImage.layer.borderColor = UIColor(red: 16/255, green: 126/255, blue: 207/255, alpha: 1).cgColor
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -79,14 +86,16 @@ class finishPhoto: UIViewController {
     
     @IBAction func didTapReject(_ sender: customButton) {
         
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
+        self.performSegue(withIdentifier: "finishPhotoToBarcodeScanner", sender: nil)
         
     }
     
     @IBAction func didTapBacktoMain(_ sender: UIButton) {
         
         photoViewDismissHelper = 0
-        self.dismiss(animated: true, completion: nil)
+        self.performSegue(withIdentifier: "finalPhotoToMain", sender: nil)
+//        self.dismiss(animated: true, completion: nil)
         
     }
     
@@ -144,10 +153,13 @@ class finishPhoto: UIViewController {
         let editedPhotoPath = "/photos/\(key)/editedPhotoUrl"
         let editedPhotoValue = "na"
         
+        let countryPath = "/photos/\(key)/country"
+        let countryValue = myCountry
+        
         let photoTimestamp = "/photos/\(key)/timestamp"
         
         
-        let childUpdates:Dictionary<String, Any> = [photoTimestamp:[".sv": "timestamp"],photoUrlPath:photoUrlValue,myIdPath:myIdValue,myNamePath:myNameValue,photoDatePath:photoDateValue,photoStorePath:photoStoreValue,photoPhotoshootKeyPath:photoPhotoshootKeyValue,isVariableWeightPath:isVariableWeightValue,rawBarcodePath:rawBarcodeValue,scannedBarcodePath:scannedBarcodeValue,adjustedPluCodePath:adjustedPluCodeValue,pluCodePath:pluCodeValue,pluPricePath:pluPriceValue,photoNotePath:photoNoteValue,isDeliItemPath:isDeliItemValue,photoKeyPath:photoKeyValue,editedPhotoPath:editedPhotoValue]
+        let childUpdates:Dictionary<String, Any> = [photoTimestamp:[".sv": "timestamp"],photoUrlPath:photoUrlValue,myIdPath:myIdValue,myNamePath:myNameValue,photoDatePath:photoDateValue,photoStorePath:photoStoreValue,photoPhotoshootKeyPath:photoPhotoshootKeyValue,isVariableWeightPath:isVariableWeightValue,rawBarcodePath:rawBarcodeValue,scannedBarcodePath:scannedBarcodeValue,adjustedPluCodePath:adjustedPluCodeValue,pluCodePath:pluCodeValue,pluPricePath:pluPriceValue,photoNotePath:photoNoteValue,isDeliItemPath:isDeliItemValue,photoKeyPath:photoKeyValue,editedPhotoPath:editedPhotoValue,countryPath:countryValue]
         
         databaseRef.updateChildValues(childUpdates)
         
@@ -159,7 +171,8 @@ class finishPhoto: UIViewController {
         
         alertDeliveryComplete.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
             
-            self.dismiss(animated: false, completion: nil)
+            self.performSegue(withIdentifier: "finishPhotoToBarcodeScanner", sender: nil)
+//            self.dismiss(animated: false, completion: nil)
             
         }))
         self.present(alertDeliveryComplete, animated: true, completion: nil)

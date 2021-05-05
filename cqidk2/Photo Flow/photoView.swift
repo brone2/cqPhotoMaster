@@ -13,7 +13,8 @@ import FirebaseDatabase
 import FBSDKLoginKit
 
 class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+//LOOK INTO SWIFT SPINNER
+    
 //    https://stackoverflow.com/questions/28419336/uiimagepickercontroller-camera-overlay-that-matches-the-default-cropping
     var storageRef = Storage.storage().reference()
     
@@ -22,6 +23,7 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
 
       
     }
+    
     override func viewDidAppear(_ animated: Bool) { 
 
         print(photoViewDismissHelper)
@@ -41,8 +43,9 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
         }
         
         if photoViewDismissHelper == 2 {
-            print(photoViewDismissHelper)
-            self.dismiss(animated: false, completion: nil)
+            self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
+            //        PUT THIS BACK
+//            self.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -52,7 +55,6 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         photoViewDismissHelper = 2
-
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }
@@ -75,20 +77,26 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
            
             downloadUrlAbsoluteStringValue = url.absoluteString
             print(downloadUrlAbsoluteStringValue)
+            
+            //Dismissing the alert spinny thing first
+//            self.dismiss(animated: false, completion: nil)
+            
+            //Dismissing the camera
             self.dismiss(animated: false, completion: nil)
+            self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
+            //        PUT THIS BACK
+//            self.dismiss(animated: false, completion: nil)
             
             })
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        
         picker.dismiss(animated: true, completion: nil)
+        
     }
     
-    
-    
-    
-
 ////THIS IS FOR CAMERA OVERLAY
     func guideForCameraOverlay() -> UIView {
         let guide = UIView(frame: UIScreen.main.fullScreenSquare())
@@ -99,6 +107,8 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
         return guide
     }
 //    //END THIS IS FOR CAMERA OVERLAY
+    
+    
     
 }
 
@@ -130,19 +140,18 @@ extension UIScreen {
             
         y = (UIScreen.main.bounds.size.height / 2) - (hw / 2) //Original
 
-//            #Not working iPhone8 Plus
-            
 //PHONE SIZES ADJUST Y *********************
             
-        if isX && screenHeight >= 667.0 { //VALIDATED iPhoneX, iPhone11 Pro
+        if isX && screenHeight >= 667.0 { //VALIDATED
                     
             y = ((UIScreen.main.bounds.size.height - padding_height - 28 + 12) / 2) - (hw / 2)
                     
         }
             
-        if isX && screenHeight >= 736.0 { //VALIDATED iPhoneX, iPhone11 Pro
-                
-            y = ((UIScreen.main.bounds.size.height - padding_height - 28 + 8) / 2) - (hw / 2)
+        if isX && screenHeight >= 736.0 { //VALIDATED iPhone8+
+            //CURRENTLY SHOWING UP TOO LOW
+     
+            y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 2) / 2) - (hw / 2)
                 
         }
             
@@ -159,7 +168,7 @@ extension UIScreen {
                         
         }
            
-        if isX && screenHeight >= 896.0 { //NOT VALIDATED**** iPhone11, iPhone11 ProMax,
+        if isX && screenHeight >= 896.0 { //iPhone11, iPhone11 ProMax, VALIDATED IPHONE11
                 
             let size_adjust = (896 - 812)/2 //=42
             y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 42 / 2) - (hw / 2))
@@ -172,10 +181,6 @@ extension UIScreen {
             y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 57 / 2) - (hw / 2))
                     
         }
-                
-            
-     
-            
 
     }
         return CGRect(x: x, y: y, width: hw, height: hw)

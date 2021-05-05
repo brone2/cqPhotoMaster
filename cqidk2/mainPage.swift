@@ -61,7 +61,9 @@ class mainPage: UIViewController {
     
     @IBAction func didTapStartPhotos(_ sender: UIButton) {
         
+        self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
         
+    /*NOTIFICATION ABOUT WIFI AND DIRECTIONS
         let alertController = UIAlertController(
             title: "Validate Wifi Connection",
             message: "Are you currently connected to a strong Wifi network?",
@@ -94,7 +96,7 @@ class mainPage: UIViewController {
         alertController.addAction(cancelAction)
         alertController.addAction(completeAction)
         self.present(alertController, animated: true, completion: nil)
-        
+        */
     }
     
     @IBAction func didTapContinuePhotoshoot(_ sender: UIButton) {

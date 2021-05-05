@@ -1,8 +1,8 @@
 //
-//  selectStore.swift
+//  selectCountry.swift
 //  cqidk2
 //
-//  Created by Neil Bronfin on 4/9/21.
+//  Created by Neil Bronfin on 5/4/21.
 //
 
 import UIKit
@@ -11,10 +11,8 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
-class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
-    
-//    var friend_array = ["Galson","barack","mo","Kim"]
-    
+class selectCountry: UIViewController,UITableViewDelegate,UITableViewDataSource  {
+
     var buildingsNearMe = [NSDictionary?]()
     
     var buildingNameEntered:String?
@@ -26,29 +24,22 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                     if constraint.identifier == "toolBarConstraint" {
                         constraint.constant = 0
                     }
-                }  
+                }
         }
         
-            databaseRef.child("store").observe(.childAdded) { (snapshot: DataSnapshot) in
+            databaseRef.child("country").observe(.childAdded) { (snapshot: DataSnapshot) in
             
             let snapshot = snapshot.value as! NSDictionary
-                
-            //Filter on country
-            let country = snapshot["country"] as? String
-            print(country)
-                
-        if country == myCountry {
                 
             let requestDict = snapshot as! NSMutableDictionary
                 
             self.buildingsNearMe.append(requestDict)
             
-            self.buildingsNearMe.sort{($0?["store"] as! String) < ($1?["store"] as! String) }
+            self.buildingsNearMe.sort{($0?["country"] as! String) < ($1?["country"] as! String) }
             
                 print(self.buildingsNearMe)
             
-            self.storeTable.reloadData()
-        }
+            self.countryTable.reloadData()
             
         }
         
@@ -71,7 +62,7 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     //define the cell as type cell to return
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
             
-            cell.textLabel?.text = self.buildingsNearMe[indexPath.row]?["store"] as? String
+            cell.textLabel?.text = self.buildingsNearMe[indexPath.row]?["country"] as? String
             
             return cell
    
@@ -82,23 +73,29 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
        
         let selectedRowIndex = indexPath.row
         
-        myCurrentStore = self.buildingsNearMe[indexPath.row]?["store"] as! String
+        myCountry = self.buildingsNearMe[indexPath.row]?["country"] as! String
         
-        print(myCurrentStore)
+        let childUpdates2 = ["/users/\(loggedInUserId)/myCountry":myCountry]
+        //Update
+        databaseRef.updateChildValues(childUpdates2)
         
-        self.performSegue(withIdentifier: "selectStoreToMain", sender: nil)
+        print(myCountry)
+        
+        self.performSegue(withIdentifier: "selectCountryToSelectStore", sender: nil)
     }
 
     
     @IBOutlet weak var storeTable: UITableView!
     
-    @IBAction func didTapAddNewStore(_ sender: UIBarButtonItem) {
+    @IBOutlet weak var countryTable: UITableView!
+    
+    @IBAction func didTapAddNewCountry(_ sender: UIBarButtonItem) {
         
         var buildingNameTextField: UITextField?
         
         let alertController = UIAlertController(
-            title: "Add New Store",
-            message: "Please add the name of the store you are taking photos for.",
+            title: "Add New Country",
+            message: "Please add the name of the country.",
             preferredStyle: UIAlertController.Style.alert)
         
         let cancelAction = UIAlertAction(
@@ -111,16 +108,20 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             (action) -> Void in
             if let buildingName = buildingNameTextField?.text {
                 self.buildingNameEntered = buildingName.capitalizingFirstLetter()
+//                self.buildingNameEntered = self.buildingNameEntered?.replacingOccurrences(of: ".",with: "")
             }
             
-            myCurrentStore = self.buildingNameEntered!
-            let key = databaseRef.child("store").childByAutoId().key!
+            myCountry = self.buildingNameEntered!
+            let key = databaseRef.child("country").childByAutoId().key!
             
-            let childUpdates = ["/store/\(key)/store":self.buildingNameEntered!,"/store/\(key)/created_by_uid":loggedInUserId, "/store/\(key)/created_by_name":myName,"/store/\(key)/created_date":todayDate,"/store/\(key)/country":myCountry,"/store/\(key)/storeKey":key] as [String : Any]
-            
-            print(childUpdates)
-            
+            let childUpdates = ["/country/\(key)/country":self.buildingNameEntered!,"/country/\(key)/created_by_uid":loggedInUserId, "/country/\(key)/created_by_name":myName,"/country/\(key)/created_date":todayDate] as [String : Any]
+  
             databaseRef.updateChildValues(childUpdates)
+            
+            let childUpdates2 = ["/users/\(loggedInUserId)/myCountry":myCountry]
+
+            //Update
+            databaseRef.updateChildValues(childUpdates2)
             
             self.segueOn()
  
@@ -129,12 +130,17 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         alertController.addTextField {
             (bldName) -> Void in
             buildingNameTextField = bldName
-            buildingNameTextField!.placeholder = "The Corner Market"
+            buildingNameTextField!.placeholder = "Indonesia"
         }
         
         alertController.addAction(cancelAction)
         alertController.addAction(completeAction)
         self.present(alertController, animated: true, completion: nil)
+
+    }
+    
+    
+    @IBAction func didTapAddNewStore(_ sender: UIBarButtonItem) {
 
     }
     
@@ -152,13 +158,13 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     func segueOn() {
         
         print("NOTCED")
-        let alert = UIAlertController(title: "Store Registered", message:  "Welcome to \(self.buildingNameEntered!)!", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Country Registered", message:  "\(self.buildingNameEntered!) has been registered!", preferredStyle: UIAlertController.Style.alert)
             
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
                 
-                print(myCurrentStore)
+                print(myCountry)
                 
-                self.performSegue(withIdentifier: "selectStoreToMain", sender: nil)
+                self.performSegue(withIdentifier: "selectCountryToSelectStore", sender: nil)
             }))
         present(alert, animated: true, completion: nil)
     }
@@ -177,29 +183,3 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
 
 }
 
-
-extension UIViewController {
-    func make_alert(title: String,message: String){
-        
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            //what happens when button is clicked
-//            self.dismiss(animated: true, completion: nil)
-        }))
-        
-        present(alert, animated: true, completion: nil)
- 
-    }//func make_alert(title: String,message: String){
-}
-
-
-extension String {
-    func capitalizingFirstLetter() -> String {
-        return prefix(1).capitalized + dropFirst()
-    }
-
-    mutating func capitalizeFirstLetter() {
-        self = self.capitalizingFirstLetter()
-    }
-}

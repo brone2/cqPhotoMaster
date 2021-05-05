@@ -13,6 +13,7 @@ import FirebaseDatabase
 import MessageUI
 
 
+
 class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
 
     var buildingNameEntered:String?
@@ -39,11 +40,11 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
         
     }
     
-    
+    //Actually ChangeCountry
     
     @IBAction func didTapSubmitFeedback(_ sender: UIButton) {
         
-        self.settingsAlert(title: "Submit Feedback", message: "Any and all feedback is welcome to help improve our product", placeHolder: "I think your logo should be blue")
+        self.performSegue(withIdentifier: "settingsToChangeCountry", sender: nil)
         
     }
     
@@ -55,6 +56,8 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     @IBAction func didTapOtherInquiries(_ sender: UIButton) {
+        
+        self.updateInfo()
     
         self.settingsAlert(title: "Other Inquiries", message: "Please describe your inquiry", placeHolder: "")
     
@@ -154,9 +157,6 @@ func settingsAlert (title: String, message: String, placeHolder:String) {
             
         let childUpdates = ["/inquiry/\(myName)/\(someString)":self.buildingNameEntered!] as [String : Any]
         databaseRef.updateChildValues(childUpdates)
-            
-            
-            
 
     }
     
@@ -176,7 +176,44 @@ func settingsAlert (title: String, message: String, placeHolder:String) {
     
     
     
+    func updateInfo () {
+        
+//    //Update Users Country all the same
+//
+//        databaseRef.child("users").observe(.childAdded) { (snapshot: DataSnapshot) in
+//        let snapshot = snapshot.value as! NSDictionary
+//        let userId = snapshot["userId"] as? String
+//        let childUpdates = ["/users/\(userId!)/myCountry":"USA"]
+//        databaseRef.updateChildValues(childUpdates)
+//
+//    //End Update Users Country all the same
+            
+    //Update Photo Country all the same
+        
+//        databaseRef.child("photos").observe(.childAdded) { (snapshot: DataSnapshot) in
+//        let snapshot = snapshot.value as! NSDictionary
+//        let userId = snapshot["photoKey"] as? String
+//        let childUpdates = ["/photos/\(userId!)/country":"USA"]
+//        databaseRef.updateChildValues(childUpdates)
+            
+    //End Update Photo Country all the same
 
+// End Update Store Country all the same
+        
+    
+            
+            
+            
+            
+            
+            
+//    }
+        
+        
+        
+        
+        
+    }
     
     
     

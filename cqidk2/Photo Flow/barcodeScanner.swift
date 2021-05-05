@@ -22,20 +22,6 @@ class barcodeScanner: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
      
         //Add text on top of barcode scann begin*********
-//        let circleLayer = CATextLayer()
-//        let radius: CGFloat = 50.0
-//        circleLayer.path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2.0 * radius, height: 2.0 * radius), cornerRadius: radius).cgPath
-//        circleLayer.position = CGPoint(x: 200, y: 200)
-//        circleLayer.fillColor = UIColor.blue.cgColor
-//        view.layer.insertSublayer(circleLayer, above: self.avPreviewLayer)
-        
-        
-//        let myTextLayer = CATextLayer()
-//        myTextLayer.string = "My text"
-//        myTextLayer.backgroundColor = UIColor.blue.cgColor
-//        myTextLayer.foregroundColor = UIColor.cyan.cgColor
-//        myTextLayer.frame = view.bounds
-//        view.layer.addSublayer(myTextLayer)
         
         let textlayer = CATextLayer()
 
@@ -50,10 +36,7 @@ class barcodeScanner: UIViewController {
 
         view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
         
-        
-        
-        
-        //HHHHHEEERREEREEAdd text on top of barcode scann end*********
+        //text on top of barcode scann end*********
  
         downloadUrlAbsoluteStringValue = ""
         scannedBarcode = "TBD"
@@ -72,7 +55,8 @@ class barcodeScanner: UIViewController {
         super.viewDidLoad()
         
         if photoViewDismissHelper == 1 {
-            self.performSegue(withIdentifier: "barcodeScannerToFinalPhoto", sender: nil)
+            //        PUT THIS BACK
+//            self.performSegue(withIdentifier: "barcodeScannerToFinalPhoto", sender: nil)
         }
         
         
@@ -137,7 +121,9 @@ class barcodeScanner: UIViewController {
         super.viewWillAppear(animated)
         
         if photoViewDismissHelper == 1 {
-            self.dismiss(animated: false, completion: nil)
+         
+            //        PUT THIS BACK
+//            self.dismiss(animated: false, completion: nil)
         }
         
         
@@ -177,15 +163,13 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
             found(code: stringValue)
         }
         
-        dismiss(animated: true)
+        
+        
+        //        PUT THIS BACK
+//        dismiss(animated: true)
+        self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
     }
-   
-    
-//    var scannedBarcode:String = "TBD"
-//    var isVariableWeight:String = "FALSE"
-//    var adjustedPluCode:String = "FALSE"
-//    var pluCode:String = "FALSE"
-//    var pluPrice:String = "0.00"
+
     
 //Save and reformat barcode info. 1. Remove leading
     func found(code: String) {
@@ -226,14 +210,10 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
         
 //        self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
         photoViewDismissHelper = 1
-        self.dismiss(animated: false, completion: nil)
+        
+//        PUT THIS BACK
+//        self.dismiss(animated: false, completion: nil)
 
-        
-        
-        
-        
-        
-        
         
     }
     

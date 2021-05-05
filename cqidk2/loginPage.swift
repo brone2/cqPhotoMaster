@@ -23,6 +23,8 @@ class loginPage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
 
         // Do any additional setup after loading the view.
     }
@@ -72,7 +74,7 @@ class loginPage: UIViewController {
                     //Update
                     databaseRef.updateChildValues(childUpdates)
                     Analytics.setUserProperty(myName, forName: "fullName")
-                    self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)}
+                    self.performSegue(withIdentifier: "loginToSelectCountry", sender: nil)}
             
         })
     }
@@ -83,7 +85,7 @@ class loginPage: UIViewController {
 
     @IBAction func didTapLogin(_ sender: UIButton) {
         
-        if self.nameLabel.text == "" {
+        if self.emailLabel.text == "" {
             make_alert(title: "Please Enter Required Info", message: "Please fill out the name, email, and password fields")
         }  else {
         
