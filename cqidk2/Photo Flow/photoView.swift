@@ -14,6 +14,7 @@ import FBSDKLoginKit
 
 class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 //LOOK INTO SWIFT SPINNER
+// Use photoViewDismissHelper to segue after photo is taken (1 is show camera 2 is segue)
     
 //    https://stackoverflow.com/questions/28419336/uiimagepickercontroller-camera-overlay-that-matches-the-default-cropping
     var storageRef = Storage.storage().reference()
@@ -28,30 +29,28 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
 
         print(photoViewDismissHelper)
         if photoViewDismissHelper == 1 {
+            
         let picker = UIImagePickerController()
         picker.sourceType = .camera
         picker.delegate = self
         picker.allowsEditing = true
 
-//THIS IS FOR CAMERA OVERLAY
-        picker.cameraOverlayView = guideForCameraOverlay()
-        picker.view.layer.addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
+//THIS IS FOR CAMERA OVERLAY: EXCLUDING IPHONE12 UNTIL CAN FIGURE OUT THE COORDINATES
+//        if is_iphone_12 == false {
+            picker.cameraOverlayView = guideForCameraOverlay()
+            picker.view.layer.addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
+//        }
 //END THIS IS FOR CAMERA OVERLAY
         
         self.present(picker, animated: true)
             
         }
         
-        if photoViewDismissHelper == 2 {
+        if photoViewDismissHelper == 2 { //Helper for when camera is dismissed to segue
             self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
-            //        PUT THIS BACK
-//            self.dismiss(animated: false, completion: nil)
         }
     }
-    
-  
-    
-    
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         photoViewDismissHelper = 2
@@ -82,8 +81,8 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
 //            self.dismiss(animated: false, completion: nil)
             
             //Dismissing the camera
-            self.dismiss(animated: false, completion: nil)
-            self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
+            self.dismiss(animated: false, completion: self.testSegue)
+//            self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
             //        PUT THIS BACK
 //            self.dismiss(animated: false, completion: nil)
             
@@ -95,6 +94,10 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
         
         picker.dismiss(animated: true, completion: nil)
         
+    }
+    
+    func testSegue(){
+        self.performSegue(withIdentifier: "photoViewToFinishPhoto", sender: nil)
     }
     
 ////THIS IS FOR CAMERA OVERLAY
@@ -139,6 +142,7 @@ extension UIScreen {
         let padding_height = topPadding + bottomPadding
             
         y = (UIScreen.main.bounds.size.height / 2) - (hw / 2) //Original
+            
 
 //PHONE SIZES ADJUST Y *********************
             
@@ -155,16 +159,19 @@ extension UIScreen {
                 
         }
             
-        if isX && screenHeight >= 812.0 { //VALIDATED iPhoneX, iPhone11 Pro
+
+        if isX && screenHeight >= 812.0 { //VALIDATED iPhoneX, iPhone11 Pro MY PHONE
             
             y = ((UIScreen.main.bounds.size.height - padding_height - 28) / 2) - (hw / 2)
             
         }
             
-        if isX && screenHeight >= 844.0 { //NOT VALIDATED**** iPhone12, iPhone12 Pro
-                        
+        if isX && screenHeight == 844.0 { //NOT VALIDATED**** iPhone12, iPhone12 Pro PROBLEM!!!!!
+                 
+        //*****TRYING THIS BECAUSE APPARENTLY THERE IS NO SAFE AREA ON IPHONE 12, STRAIGHT FORMULA COPY
             let size_adjust = (844 - 812)/2 //=16
-            y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 16 / 2) - (hw / 2))
+//            y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 42 / 2) - (hw / 2))
+            y = ((UIScreen.main.bounds.size.height / 2) - (hw / 2))
                         
         }
            
@@ -175,12 +182,23 @@ extension UIScreen {
                 
         }
             
-        if isX && screenHeight >= 926.0 { //NOT VALIDATED**** iPhone12 ProMax,
+        if isX && screenHeight == 926.0 { //NOT VALIDATED**** iPhone12 ProMax,
                     
-            let size_adjust = (926 - 812)/2 //=57
-            y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 57 / 2) - (hw / 2))
+            //*****TRYING THIS BECAUSE APPARENTLY THERE IS NO SAFE AREA ON IPHONE 12, STRAIGHT FORMULA COPY
+                let size_adjust = (844 - 812)/2 //=16
+    //          y = ((UIScreen.main.bounds.size.height - padding_height - 28 - 42 / 2) - (hw / 2))
+                y = ((UIScreen.main.bounds.size.height / 2) - (hw / 2))
                     
         }
+            
+    
+    //TEST IPHONE 12*******************
+        if isX && screenHeight == 926.0 { //NOT VALIDATED**** iPhone12 ProMax,
+                    
+            y = yTestValue
+                    
+        }
+    //END TEST IPHONE 12
 
     }
         return CGRect(x: x, y: y, width: hw, height: hw)

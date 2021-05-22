@@ -18,21 +18,6 @@ class mainPage: UIViewController {
         self.myCurrentStoreLabel.text = myCurrentStore
         self.photoShootIdLabel.text = myPhotoShootKey
         
-        print(photoViewDismissHelper)
-        
-        if photoViewDismissHelper == 1 {
-            self.performSegue(withIdentifier: "mainToPhotoView", sender: nil)
-        }
-        
-        if photoViewDismissHelper == 2 {
-            self.performSegue(withIdentifier: "mainTofinalPhoto", sender: nil)
-        }
-        
-        if photoViewDismissHelper == 3 {
-            self.performSegue(withIdentifier: "mainToBarcodeScan", sender: nil)
-        }
-        
-        
     }
     
     override func viewDidLoad() {

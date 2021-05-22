@@ -27,7 +27,7 @@ class finishPhoto: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        photoViewDismissHelper = 3
+//        photoViewDismissHelper = 3
         
         let image = downloadUrlAbsoluteStringValue
         let data = try? Data(contentsOf: URL(string: image)!)
@@ -93,7 +93,7 @@ class finishPhoto: UIViewController {
     
     @IBAction func didTapBacktoMain(_ sender: UIButton) {
         
-        photoViewDismissHelper = 0
+//        photoViewDismissHelper = 0
         self.performSegue(withIdentifier: "finalPhotoToMain", sender: nil)
 //        self.dismiss(animated: true, completion: nil)
         

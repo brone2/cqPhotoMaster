@@ -12,11 +12,21 @@
 import UIKit
 import AVFoundation
  
+//Need to set photoViewDismissHelper = 1 here to begin next view on the camera picker
 //Scan the barcode and then do all reformatting
 class barcodeScanner: UIViewController {
     
     var avCaptureSession: AVCaptureSession!
     var avPreviewLayer: AVCaptureVideoPreviewLayer!
+    
+    @IBAction func didTapBackButton(_ sender: UIButton) {
+        
+        self.performSegue(withIdentifier: "barcodeScanToMain", sender: nil)
+        
+    }
+    
+    @IBOutlet weak var backButtonView: UIView!
+    
     
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,6 +115,7 @@ class barcodeScanner: UIViewController {
             self.avPreviewLayer.frame = self.view.layer.bounds
             self.avPreviewLayer.videoGravity = .resizeAspectFill
             self.view.layer.addSublayer(self.avPreviewLayer)
+            self.view.bringSubviewToFront(self.backButtonView)
             self.avCaptureSession.startRunning()
         }
     }
@@ -120,11 +131,11 @@ class barcodeScanner: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if photoViewDismissHelper == 1 {
+//        if photoViewDismissHelper == 1 {
          
             //        PUT THIS BACK
 //            self.dismiss(animated: false, completion: nil)
-        }
+//        }
         
         
         if (avCaptureSession?.isRunning == false) {

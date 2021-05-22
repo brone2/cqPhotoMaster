@@ -86,7 +86,7 @@ class loginPage: UIViewController {
     @IBAction func didTapLogin(_ sender: UIButton) {
         
         if self.emailLabel.text == "" {
-            make_alert(title: "Please Enter Required Info", message: "Please fill out the name, email, and password fields")
+            make_alert(title: "Please Enter Email and Password to Sign in", message: "Please enter your email and password above to Sign In. You do not need to enter your name to login, just provide your email and password above and then select Sign In.")
         }  else {
         
         Auth.auth().signIn(withEmail: self.emailLabel.text!, password: self.passwordLabel.text!, completion: { (user, error) in
@@ -108,13 +108,16 @@ class loginPage: UIViewController {
                     
                     myName = self.loggedInUserData?["myName"] as! String
                     myEmail = self.loggedInUserData?["myEmail"] as! String
+                    myCountry = self.loggedInUserData?["myCountry"] as! String
+                    print(myCountry)
                     self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)
+                    
          
                 }
             }
         })
 
-        self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)
+//        self.performSegue(withIdentifier: "loginToSelectStore", sender: nil)
         
     }
     }

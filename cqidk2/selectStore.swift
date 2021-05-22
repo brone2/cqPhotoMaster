@@ -11,6 +11,8 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
+var yTestValue:CGFloat = 50.0
+
 class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
 //    var friend_array = ["Galson","barack","mo","Kim"]
@@ -19,7 +21,25 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
     var buildingNameEntered:String?
     
+    var yTestHelper: AnyObject?
+    
     override func viewDidAppear(_ animated: Bool) {
+        
+        
+        //TEST GET Y COORDINATES FOR BOX ON IPHONE 12 *******************
+        databaseRef.child("inquiry").child("ytest").observeSingleEvent(of: .value) { (snapshot:DataSnapshot) in
+            self.yTestHelper = snapshot.value as? NSDictionary
+            if self.yTestHelper?["yTestValue"] != nil  {
+                yTestValue = (self.yTestHelper!["yTestValue"] as? CGFloat)!
+                print(yTestValue)
+            }
+        } // end get uder info
+        // END TEST GET Y COORDINATES FOR BOX ON IPHONE 12 *******************
+        
+        if myCountry == "notSelected" {
+            myCountry = "USA"
+            print(myName)
+        }
         
         if isX == false{
                 for constraint in self.view.constraints {
@@ -36,6 +56,7 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             //Filter on country
             let country = snapshot["country"] as? String
             print(country)
+            print(myCountry)
                 
         if country == myCountry {
                 
