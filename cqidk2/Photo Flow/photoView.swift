@@ -37,8 +37,14 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
       
     }
     
-    override func viewDidAppear(_ animated: Bool) { 
-
+    override func viewDidAppear(_ animated: Bool) {
+        
+        
+        //helper to segue back to barcode scanner on picker dismiss
+        if isTapCancelPhoto {
+            self.performSegue(withIdentifier: "photoViewToBarcodeView", sender: nil)
+        }
+        
         print(photoViewDismissHelper)
         if photoViewDismissHelper == 1 {
             
@@ -126,11 +132,9 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
         spinner?.color = UIColor.green
         spinner?.style = UIActivityIndicatorView.Style.large
         picker.view.addSubview(spinner!)
-        
-        
-        
-        
+
         photoViewDismissHelper = 2
+        
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }
@@ -171,6 +175,9 @@ class photoView: UIViewController, UIImagePickerControllerDelegate, UINavigation
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
+        
+        //set the helper isTapCancelPhoto to TRUE so it segs when the initial view appears
+        isTapCancelPhoto = true
         picker.dismiss(animated: true, completion: nil)
         
     }

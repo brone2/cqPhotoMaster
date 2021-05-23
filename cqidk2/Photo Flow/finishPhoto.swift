@@ -162,10 +162,7 @@ class finishPhoto: UIViewController {
         let childUpdates:Dictionary<String, Any> = [photoTimestamp:[".sv": "timestamp"],photoUrlPath:photoUrlValue,myIdPath:myIdValue,myNamePath:myNameValue,photoDatePath:photoDateValue,photoStorePath:photoStoreValue,photoPhotoshootKeyPath:photoPhotoshootKeyValue,isVariableWeightPath:isVariableWeightValue,rawBarcodePath:rawBarcodeValue,scannedBarcodePath:scannedBarcodeValue,adjustedPluCodePath:adjustedPluCodeValue,pluCodePath:pluCodeValue,pluPricePath:pluPriceValue,photoNotePath:photoNoteValue,isDeliItemPath:isDeliItemValue,photoKeyPath:photoKeyValue,editedPhotoPath:editedPhotoValue,countryPath:countryValue]
         
         databaseRef.updateChildValues(childUpdates)
-        
-//        make_alert(title: "Product Saved", message: "Content has been saved for \(scannedBarcode)")
-        
-//        self.dismiss(animated: false, completion: nil)
+
         
         let alertDeliveryComplete = UIAlertController(title: "Product Saved", message: "The content for \(rawBarcode) has been saved", preferredStyle: UIAlertController.Style.alert)
         

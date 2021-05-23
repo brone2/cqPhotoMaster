@@ -18,6 +18,7 @@ class barcodeScanner: UIViewController {
     
     var avCaptureSession: AVCaptureSession!
     var avPreviewLayer: AVCaptureVideoPreviewLayer!
+    var buildingNameEntered:String?
     
     @IBAction func didTapBackButton(_ sender: UIButton) {
         
@@ -31,23 +32,9 @@ class barcodeScanner: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
      
-        //Add text on top of barcode scann begin*********
-        
-        let textlayer = CATextLayer()
-
-        textlayer.frame = CGRect(x: view.bounds.midX - 280/2  , y: 80, width: 280, height: 40)
-        textlayer.fontSize = 40
-        textlayer.alignmentMode = .center
-        textlayer.string = "Scan Barcode"
-        textlayer.isWrapped = true
-        textlayer.truncationMode = .end
-        textlayer.backgroundColor = UIColor.clear.cgColor
-        textlayer.foregroundColor = UIColor.green.cgColor
-
-        view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
-        
-        //text on top of barcode scann end*********
- 
+        //Helper associated with segue from selecting Cancel on photo picker
+        isTapCancelPhoto = false
+        //Set all barcode values back to default
         downloadUrlAbsoluteStringValue = ""
         scannedBarcode = "TBD"
         rawBarcode = "TBD"
@@ -64,10 +51,6 @@ class barcodeScanner: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if photoViewDismissHelper == 1 {
-            //        PUT THIS BACK
-//            self.performSegue(withIdentifier: "barcodeScannerToFinalPhoto", sender: nil)
-        }
         
         
         downloadUrlAbsoluteStringValue = ""
@@ -103,7 +86,6 @@ class barcodeScanner: UIViewController {
                 
                 metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
                 metadataOutput.metadataObjectTypes = [.ean8, .ean13]
-            
 //                metadataOutput.metadataObjectTypes = [.ean8, .ean13, .pdf417, .qr] REMOVE OTHER CODES FROM BEING SCANNED
                 
             } else {
@@ -116,8 +98,80 @@ class barcodeScanner: UIViewController {
             self.avPreviewLayer.videoGravity = .resizeAspectFill
             self.view.layer.addSublayer(self.avPreviewLayer)
             self.view.bringSubviewToFront(self.backButtonView)
+            
+            //Add text to direct to scan the barcode
+            let textlayer = CATextLayer()
+            textlayer.frame = CGRect(x: self.view.bounds.midX - 280/2  , y: 86, width: 280, height: 44)
+            textlayer.fontSize = 42
+            textlayer.alignmentMode = .center
+            textlayer.string = "Scan Barcode"
+            textlayer.isWrapped = true
+            textlayer.truncationMode = .end
+            textlayer.backgroundColor = UIColor.clear.cgColor
+            textlayer.foregroundColor = UIColor.green.cgColor
+            self.view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
+            //End Add text to direct to scan the barcode
+            
+            //Add manually enter sku button
+            let myButton = UIButton(type: .system)
+            myButton.frame = CGRect(x: self.view.bounds.midX - 280/2  , y: screenHeight - 140, width: 280, height: 40)
+            myButton.setTitle("Enter Custom SKU", for: .normal)
+            myButton.addTarget(self, action: #selector(self.buttonAction(_:)), for: .touchUpInside)
+            myButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 28)
+            myButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
+            //myButton.underlineText()
+            self.view.addSubview(myButton)
+            //End Add manually enter sku button
+              
+
             self.avCaptureSession.startRunning()
         }
+    }
+    
+//CUSTOM SKU SELECTED TO BE ENTERED
+    @objc func buttonAction(_ sender:UIButton!) {
+
+        var buildingNameTextField: UITextField?
+        
+        let alertController = UIAlertController(
+            title: "Enter Custom SKU",
+            message: "If this item has a barcode, please select Cancel and scan the barcode. Do not manually type in a barcode.",
+            preferredStyle: UIAlertController.Style.alert)
+        
+        let cancelAction = UIAlertAction(
+            title: "Cancel", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+        }
+        
+        let completeAction = UIAlertAction(
+            title: "Complete", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+            if let buildingName = buildingNameTextField?.text {
+                self.buildingNameEntered = buildingName.capitalizingFirstLetter()
+                scannedBarcode = "CUSTOM - " + self.buildingNameEntered!
+                rawBarcode = "CUSTOM - " + self.buildingNameEntered!
+                isVariableWeight = false
+                adjustedPluCode = ""
+                pluCode = ""
+                pluPrice = ""
+            }
+            
+            photoViewDismissHelper = 1
+            self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+
+        }
+        
+        alertController.addTextField {
+            (bldName) -> Void in
+            buildingNameTextField = bldName
+            buildingNameTextField!.placeholder = "Ex: Roast Beef sold by 1/2 pound"
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(completeAction)
+        self.present(alertController, animated: true, completion: nil)
+
+      
     }
     
     
@@ -130,13 +184,6 @@ class barcodeScanner: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        if photoViewDismissHelper == 1 {
-         
-            //        PUT THIS BACK
-//            self.dismiss(animated: false, completion: nil)
-//        }
-        
         
         if (avCaptureSession?.isRunning == false) {
             avCaptureSession.startRunning()
@@ -173,11 +220,7 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             found(code: stringValue)
         }
-        
-        
-        
-        //        PUT THIS BACK
-//        dismiss(animated: true)
+
         self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
     }
 
@@ -186,7 +229,6 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
     func found(code: String) {
         
         print(code)
-        
         let codeAsInt = Int(code)
         let codeFormatted =  "\(codeAsInt!)"
         scannedBarcode = codeFormatted
@@ -195,46 +237,26 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
         
         //Check if is variable weight
         let leadingDigit = scannedBarcode[0]
-        
         if ((scannedBarcode.count) == 12) && (leadingDigit == "2") {
-           
             isVariableWeight = true
             adjustedPluCode = "a" + scannedBarcode.substring(toIndex: scannedBarcode.length - 5) + "00000"
             pluCode = "a" + scannedBarcode[1 ..< 6]
             pluPrice = "a" + scannedBarcode[7 ..< 11]
-            
-            
         } else {
             isVariableWeight = false
             adjustedPluCode = ""
             pluCode = ""
             pluPrice = ""
         }
-        
         scannedBarcode = "a" + scannedBarcode
-        
         print(scannedBarcode)
         print(isVariableWeight)
         print(adjustedPluCode)
         print(pluCode)
         print(pluPrice)
-        
-//        self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
         photoViewDismissHelper = 1
-        
-//        PUT THIS BACK
-//        self.dismiss(animated: false, completion: nil)
-
-        
     }
-    
-    
-    
 }
-
-
-
-
 
 
 
@@ -264,4 +286,19 @@ extension String {
         let end = index(start, offsetBy: range.upperBound - range.lowerBound)
         return String(self[start ..< end])
     }
+}
+
+
+extension UIButton {
+  func underlineText() {
+    guard let title = title(for: .normal) else { return }
+
+    let titleString = NSMutableAttributedString(string: title)
+    titleString.addAttribute(
+      .underlineStyle,
+      value: NSUnderlineStyle.single.rawValue,
+      range: NSRange(location: 0, length: title.count)
+    )
+    setAttributedTitle(titleString, for: .normal)
+  }
 }
