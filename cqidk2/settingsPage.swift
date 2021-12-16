@@ -19,17 +19,44 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     var buildingNameEntered:String?
     var myPastRecieve = [NSDictionary?]()
     var emailString = ""
+    var orderHelper = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if isInAudit {
+            self.auditButton.setTitle("End Audit", for: .normal)
+        }
         // Do any additional setup after loading the view.
     }
     
-//All prompt function to input feedback
-    @IBAction func didTapChangeEmail(_ sender: UIButton) {
+    @IBOutlet weak var auditButton: UIButton!
+    //All prompt function to input feedback
+    @IBAction func didTapChangeEmail(_ sender: UIButton) { //THIS IS NOW TEST!!!!!!
+  
+        print("PRESSED")
+
+        if isInAudit == true { //press to end the audit
+            
+            isInAudit = false
+            self.make_alert(title: "Audit Ended", message: "The audit has now ended")
+            self.auditButton.setTitle("Begin Audit", for: .normal)
+            self.orderHelper = 1
+            
+        }
         
-        self.settingsAlert(title: "Enter New Email", message: "Please enter your new email address", placeHolder: "myNewEmail@gmail.com")
+        if isInAudit == false  { // press to begin audit
+            if self.orderHelper == 0 {
+                isInAudit = true
+                let randomNum:UInt32 = arc4random_uniform(100)
+                let someString:String = String(randomNum)
+                auditCode = myCurrentStore + "Audit" + someString
+                self.make_alert(title: "Audit Began", message: "You are now in audit mode, select end audit to end this audit")
+                self.auditButton.setTitle("End Audit", for: .normal)
+            }
+            
+        }
+                
         
     }
     
@@ -57,10 +84,14 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBAction func didTapOtherInquiries(_ sender: UIButton) {
         
-        self.updateInfo()
+//        self.updateInfo()
+//
+//        self.settingsAlert(title: "Other Inquiries", message: "Please describe your inquiry", placeHolder: "")
     
-        self.settingsAlert(title: "Other Inquiries", message: "Please describe your inquiry", placeHolder: "")
-    
+        is_edit_store_id = true
+        self.performSegue(withIdentifier: "settingsToSelectStore", sender: nil)
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {

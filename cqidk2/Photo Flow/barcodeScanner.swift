@@ -249,6 +249,11 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
             pluPrice = ""
         }
         scannedBarcode = "a" + scannedBarcode
+        
+        //IN AUDIT HERE DO THE CHECK IF THE PRODUCT IS IN CATALOG
+        
+        
+        
         print(scannedBarcode)
         print(isVariableWeight)
         print(adjustedPluCode)

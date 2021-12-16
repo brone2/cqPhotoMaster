@@ -26,6 +26,10 @@ var myPhotoShootKey:String = "TBD"
 var myEmail:String = "TBD"
 var isX = true
 var screenHeight:CGFloat = 25.0
+var is_edit_store_id = false
+
+var isInAudit:Bool = false
+var auditCode:String = "TBD"
 
 
 //Scanning barcode variables

@@ -23,9 +23,11 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
     var yTestHelper: AnyObject?
     
+    @IBOutlet weak var addNewStoreButton: UIBarButtonItem!
+    
     override func viewDidAppear(_ animated: Bool) {
         
-        
+       
         //TEST GET Y COORDINATES FOR BOX ON IPHONE 12 *******************
         databaseRef.child("inquiry").child("ytest").observeSingleEvent(of: .value) { (snapshot:DataSnapshot) in
             self.yTestHelper = snapshot.value as? NSDictionary
@@ -103,11 +105,22 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
        
         let selectedRowIndex = indexPath.row
         
-        myCurrentStore = self.buildingsNearMe[indexPath.row]?["store"] as! String
+        if is_edit_store_id {
+                
+            let key = self.buildingsNearMe[indexPath.row]?["storeKey"] as! String
+            self.addStoreNumber(key: key)
+            
+            
+        } else {
         
-        print(myCurrentStore)
+            myCurrentStore = self.buildingsNearMe[indexPath.row]?["store"] as! String
+            
+            print(myCurrentStore)
+            
+            self.performSegue(withIdentifier: "selectStoreToMain", sender: nil)
         
-        self.performSegue(withIdentifier: "selectStoreToMain", sender: nil)
+        }
+   
     }
 
     
@@ -117,10 +130,15 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
         var buildingNameTextField: UITextField?
         
+        if myCountry != "USA"  || myName == "Neil" || myName == "Gabe" || myName == "tyeueu" {
+        
         let alertController = UIAlertController(
             title: "Add New Store",
             message: "Please add the name of the store you are taking photos for.",
             preferredStyle: UIAlertController.Style.alert)
+        
+        
+//        here add restriction!!!!!
         
         let cancelAction = UIAlertAction(
             title: "Cancel", style: UIAlertAction.Style.default) {
@@ -143,7 +161,9 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             
             databaseRef.updateChildValues(childUpdates)
             
-            self.segueOn()
+            self.addStoreNumber(key: key)
+            
+//            self.segueOn()
  
         }
         
@@ -157,8 +177,13 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         alertController.addAction(completeAction)
         self.present(alertController, animated: true, completion: nil)
 
+    } else {
+        
+        make_alert(title: "Permission Denied", message: "You do not have access to add a new store to the US. If this is a specialty store, please switch to the USA - Specialty Store country and add the store there.")
+        
+        }
+        
     }
-    
     
     
     /*
@@ -193,6 +218,54 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             
         }
         
+    }
+    
+    
+    func addStoreNumber(key: String) {
+        var buildingNameTextField: UITextField?
+        
+        let alertController = UIAlertController(
+            title: "Add Store ID",
+            message: "Please add the Cornershop Store ID",
+            preferredStyle: UIAlertController.Style.alert)
+        
+        
+//        here add restriction!!!!!
+        
+        let cancelAction = UIAlertAction(
+            title: "Cancel", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+        }
+        
+        let completeAction = UIAlertAction(
+            title: "Complete", style: UIAlertAction.Style.default) {
+            (action) -> Void in
+            if let buildingName = buildingNameTextField?.text {
+                self.buildingNameEntered = buildingName
+            }
+            
+            let store_id = self.buildingNameEntered!
+            
+            let childUpdates = ["/store/\(key)/store_id":store_id] as [String : Any]
+            
+            print(childUpdates)
+            
+            databaseRef.updateChildValues(childUpdates)
+            
+            self.segueOn()
+ 
+        }
+        
+        alertController.addTextField {
+            (bldName) -> Void in
+            buildingNameTextField = bldName
+            buildingNameTextField!.placeholder = "The Corner Market"
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(completeAction)
+        self.present(alertController, animated: true, completion: nil)
+
     }
     
 

@@ -12,10 +12,23 @@ class mainPage: UIViewController {
     @IBOutlet weak var myCurrentStoreLabel: UILabel!
     @IBOutlet weak var photoShootIdLabel: UILabel!
     
+    @IBOutlet weak var topTextLabel: UILabel!
     
     override func viewDidAppear(_ animated: Bool) {
         print("APPPEAR")
-        self.myCurrentStoreLabel.text = myCurrentStore
+           
+        if isInAudit == true {
+            self.myCurrentStoreLabel.text = auditCode
+        } else {
+            self.myCurrentStoreLabel.text = myCurrentStore
+        }
+        
+        if isInAudit == true {
+            self.topTextLabel.text = "Current Audit"
+        } else {
+            self.topTextLabel.text = "Current Store"
+        }
+        
         self.photoShootIdLabel.text = myPhotoShootKey
         
     }

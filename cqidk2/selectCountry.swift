@@ -31,6 +31,8 @@ class selectCountry: UIViewController,UITableViewDelegate,UITableViewDataSource 
             
             let snapshot = snapshot.value as! NSDictionary
                 
+            print(snapshot)
+                
             let requestDict = snapshot as! NSMutableDictionary
                 
             self.buildingsNearMe.append(requestDict)
