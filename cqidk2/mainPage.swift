@@ -18,7 +18,7 @@ class mainPage: UIViewController {
         print("APPPEAR")
            
         if isInAudit == true {
-            self.myCurrentStoreLabel.text = auditCode
+            self.myCurrentStoreLabel.text = currentAuditName
         } else {
             self.myCurrentStoreLabel.text = myCurrentStore
         }
@@ -30,6 +30,11 @@ class mainPage: UIViewController {
         }
         
         self.photoShootIdLabel.text = myPhotoShootKey
+        
+        //load audit info
+        let ref = loadAuditBarcodes()
+        var my_bc_created = ref.gather_have_content_barcodes()
+        var my_bc_not_created = ref.gather_missing_photos_barcodes()
         
     }
     

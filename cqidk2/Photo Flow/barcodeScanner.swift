@@ -21,14 +21,10 @@ class barcodeScanner: UIViewController {
     var buildingNameEntered:String?
     
     @IBAction func didTapBackButton(_ sender: UIButton) {
-        
         self.performSegue(withIdentifier: "barcodeScanToMain", sender: nil)
-        
     }
     
     @IBOutlet weak var backButtonView: UIView!
-    
-    
     
     override func viewDidAppear(_ animated: Bool) {
      
@@ -44,14 +40,10 @@ class barcodeScanner: UIViewController {
         pluPrice = ""
         photoNote = ""
         isDeliItem = false
-       
         
     }
- 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
+    
+    func scanningScript () {
         
         downloadUrlAbsoluteStringValue = ""
         avCaptureSession = AVCaptureSession()
@@ -99,6 +91,27 @@ class barcodeScanner: UIViewController {
             self.view.layer.addSublayer(self.avPreviewLayer)
             self.view.bringSubviewToFront(self.backButtonView)
             
+            //Add text to say proceed to next item if in audit mode and last item was found
+            if isShowNextPhotoMessage {
+                
+                let textlayer = CATextLayer()
+                textlayer.frame = CGRect(x: self.view.bounds.midX - 280/2  , y: self.view.bounds.midY - 40, width: 280, height: 60)
+                textlayer.fontSize = 28
+                textlayer.font = "Helvetica-Bold" as CFTypeRef
+                textlayer.alignmentMode = .center
+                textlayer.string = "Proceed to Next Item"
+                textlayer.isWrapped = true
+                textlayer.truncationMode = .end
+                textlayer.backgroundColor = UIColor.clear.cgColor
+                textlayer.foregroundColor = UIColor.systemPink.cgColor
+                self.view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
+                //End Add text to direct to scan the barcode
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { //hide after 2 seconds
+                    textlayer.isHidden = true
+                }
+                isShowNextPhotoMessage = false
+            }
+            
             //Add text to direct to scan the barcode
             let textlayer = CATextLayer()
             textlayer.frame = CGRect(x: self.view.bounds.midX - 280/2  , y: 86, width: 280, height: 44)
@@ -122,10 +135,15 @@ class barcodeScanner: UIViewController {
             //myButton.underlineText()
             self.view.addSubview(myButton)
             //End Add manually enter sku button
-              
-
             self.avCaptureSession.startRunning()
         }
+        
+    }
+ 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.scanningScript()
     }
     
 //CUSTOM SKU SELECTED TO BE ENTERED
@@ -171,9 +189,7 @@ class barcodeScanner: UIViewController {
         alertController.addAction(completeAction)
         self.present(alertController, animated: true, completion: nil)
 
-      
     }
-    
     
     func failed() {
         let ac = UIAlertController(title: "Scanner not supported", message: "Please use a device with a camera. Because this device does not support scanning a code", preferredStyle: .alert)
@@ -189,7 +205,7 @@ class barcodeScanner: UIViewController {
             avCaptureSession.startRunning()
         }
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -221,7 +237,7 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
             found(code: stringValue)
         }
 
-        self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+//        self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil) //HERE MOVING THIS TO THE FOUND FUNCTION
     }
 
     
@@ -239,7 +255,7 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
         let leadingDigit = scannedBarcode[0]
         if ((scannedBarcode.count) == 12) && (leadingDigit == "2") {
             isVariableWeight = true
-            adjustedPluCode = "a" + scannedBarcode.substring(toIndex: scannedBarcode.length - 5) + "00000"
+            adjustedPluCode = "a" + scannedBarcode.substring(toIndex: scannedBarcode.length - 6) + "00000"
             pluCode = "a" + scannedBarcode[1 ..< 6]
             pluPrice = "a" + scannedBarcode[7 ..< 11]
         } else {
@@ -251,16 +267,72 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
         scannedBarcode = "a" + scannedBarcode
         
         //IN AUDIT HERE DO THE CHECK IF THE PRODUCT IS IN CATALOG
-        
-        
-        
         print(scannedBarcode)
         print(isVariableWeight)
         print(adjustedPluCode)
         print(pluCode)
         print(pluPrice)
         photoViewDismissHelper = 1
+        
+        //Perform Audit Related Logic
+        if isAllowDuplicateScan { //always move on to take photo stage
+            self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+        }
+        
+        //TODO HERE !!!!!!!!!!!!!!!!
+        else { //If identifying duplicate items
+        
+            if auditHaveContentBarcodes.contains(scannedBarcode) || auditHaveContentBarcodes.contains(adjustedPluCode)  {
+                print("Product in Integration Created")
+                auditScanResults = "In Integration - Already Has Photo"
+                isShowNextPhotoMessage = true   //Prep Variable to show message to move to next item
+                self.scanningScript() //Move on to scan next item
+                
+                
+            } else if auditMissingPhotoBarcodes.contains(scannedBarcode) || auditMissingPhotoBarcodes.contains(adjustedPluCode) { //set some value here to signify its in integratoin
+                print("Product in Integration Not Created")
+                auditScanResults = "In Integration - Did Not Have Photo"
+                self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+                
+            } else { //set some value here to signify its not in integratoin
+                print("Product not in Integration Not Created")
+                auditScanResults = "Not in Integration"
+                self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+            }
+            
+                    //Here save the audit values
+                    if isInAudit {
+                        
+                        let key = databaseRef.child("auditScans").childByAutoId().key!
+                        
+                        let scanTimestamp = "/auditScans/\(key)/timestamp"
+                        let keyPath = "/auditScans/\(key)/key"
+                        let scannedBarcodePath = "/auditScans/\(key)/scannedBarcode"
+                        let auditScanResultsPath = "/auditScans/\(key)/auditScanResults"
+                        let auditIdPath = "/auditScans/\(key)/auditId"
+                        let auditStorePath = "/auditScans/\(key)/auditStore"
+                        let auditNamePath = "/auditScans/\(key)/auditCode"
+                        let countryPath = "/auditScans/\(key)/country"
+                        let scanDatePath = "/auditScans/\(key)/scanDate"
+                        let scanerUserNamePath = "/auditScans/\(key)/scanerUserName"
+                        let scanerUserIdPath = "/auditScans/\(key)/scanerUserId"
+                        let auditBranchIdPath = "/auditScans/\(key)/auditBranchId"
+                        let auditBranchAddressPath = "/auditScans/\(key)/auditBranchAddress"
+                        
+                        
+                        
+                        let childUpdates:Dictionary<String, Any> = [scanTimestamp:[".sv": "timestamp"],keyPath:key,scannedBarcodePath:scannedBarcode,auditScanResultsPath:auditScanResults,
+                                                                      auditIdPath:currentAuditId,auditStorePath:myCurrentStore,auditNamePath:currentAuditName,countryPath:myCountry,scanDatePath:todayDate,scanerUserNamePath:myName,
+                                                                 scanerUserIdPath:loggedInUserId,auditBranchIdPath:currentAuditBranchId,auditBranchAddressPath:currentAuditAddress]
+                        
+                        databaseRef.updateChildValues(childUpdates)
+                        
+                        
+                    }
+        
     }
+    }
+    
 }
 
 

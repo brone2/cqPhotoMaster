@@ -27,8 +27,11 @@ class selectCountry: UIViewController,UITableViewDelegate,UITableViewDataSource 
                 }
         }
         
+            print("begun pulling country")
+        
             databaseRef.child("country").observe(.childAdded) { (snapshot: DataSnapshot) in
-            
+//            databaseRef.child("country").observeSingleEvent(of: .value) { (snapshot:DataSnapshot) in
+            print("after snapshot taken")
             let snapshot = snapshot.value as! NSDictionary
                 
             print(snapshot)

@@ -40,6 +40,9 @@
 		E5BC8DBE26271B2A00CD6187 /* Splash-screen-1280x1920-Black.png in Resources */ = {isa = PBXBuildFile; fileRef = E5BC8DBD26271B2A00CD6187 /* Splash-screen-1280x1920-Black.png */; };
 		E5BC8DC326271C2D00CD6187 /* CQPhotoMaster-side-White-Version.png in Resources */ = {isa = PBXBuildFile; fileRef = E5BC8DC226271C2D00CD6187 /* CQPhotoMaster-side-White-Version.png */; };
 		E5BC8DC82627244300CD6187 /* Icon-1024x1024-White-Version.png in Resources */ = {isa = PBXBuildFile; fileRef = E5BC8DC72627244300CD6187 /* Icon-1024x1024-White-Version.png */; };
+		E5DD9BAF279071940061B39D /* loadAuditBarcodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD9BAE279071940061B39D /* loadAuditBarcodes.swift */; };
+		E5DD9BB127907E680061B39D /* selectAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD9BB027907E680061B39D /* selectAudit.swift */; };
+		E5DD9BB327908AEE0061B39D /* newAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD9BB227908AEE0061B39D /* newAudit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +109,9 @@
 		E5BC8DBD26271B2A00CD6187 /* Splash-screen-1280x1920-Black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Splash-screen-1280x1920-Black.png"; sourceTree = "<group>"; };
 		E5BC8DC226271C2D00CD6187 /* CQPhotoMaster-side-White-Version.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CQPhotoMaster-side-White-Version.png"; sourceTree = "<group>"; };
 		E5BC8DC72627244300CD6187 /* Icon-1024x1024-White-Version.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-1024x1024-White-Version.png"; sourceTree = "<group>"; };
+		E5DD9BAE279071940061B39D /* loadAuditBarcodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadAuditBarcodes.swift; sourceTree = "<group>"; };
+		E5DD9BB027907E680061B39D /* selectAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = selectAudit.swift; sourceTree = "<group>"; };
+		E5DD9BB227908AEE0061B39D /* newAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newAudit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +190,7 @@
 		E51E7C54261E3DF100DCE629 /* cqidk2 */ = {
 			isa = PBXGroup;
 			children = (
+				E5DD9BAD27906BE90061B39D /* audits */,
 				E5BC8DA82627141F00CD6187 /* images */,
 				E5BBBA5F26226FC50038F9D2 /* custom */,
 				E541026526220C6C00C4D414 /* Photo Flow */,
@@ -258,6 +265,16 @@
 				E5BC8DA92627146A00CD6187 /* CQPhotoMaster-Black-Background.jpg */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		E5DD9BAD27906BE90061B39D /* audits */ = {
+			isa = PBXGroup;
+			children = (
+				E5DD9BAE279071940061B39D /* loadAuditBarcodes.swift */,
+				E5DD9BB027907E680061B39D /* selectAudit.swift */,
+				E5DD9BB227908AEE0061B39D /* newAudit.swift */,
+			);
+			path = audits;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -518,11 +535,14 @@
 				E51E7C5A261E3DF100DCE629 /* ViewController.swift in Sources */,
 				E5BBBA6126226FEE0038F9D2 /* File.swift in Sources */,
 				E58C98DF26419F21008C54E8 /* selectCountry.swift in Sources */,
+				E5DD9BB127907E680061B39D /* selectAudit.swift in Sources */,
 				E5B4DC6D26238FA000C44552 /* settingsPage.swift in Sources */,
 				E51E7C8E2620BDAA00DCE629 /* selectStore.swift in Sources */,
+				E5DD9BB327908AEE0061B39D /* newAudit.swift in Sources */,
 				E51E7C56261E3DF100DCE629 /* AppDelegate.swift in Sources */,
 				E51E7C58261E3DF100DCE629 /* SceneDelegate.swift in Sources */,
 				E541026726220C9400C4D414 /* photoView.swift in Sources */,
+				E5DD9BAF279071940061B39D /* loadAuditBarcodes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,7 +727,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = nb.cqidk2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -729,7 +749,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = nb.cqidk2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

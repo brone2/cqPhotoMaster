@@ -160,11 +160,13 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             print(childUpdates)
             
             databaseRef.updateChildValues(childUpdates)
-            
+    
+// Only want myself or gabe to be able to add store number, largely because it confuses people on tests
+    if myName == "Neil" || myName == "Gabe" || myName == "tyeueu" {
             self.addStoreNumber(key: key)
-            
-//            self.segueOn()
- 
+    } else {
+                    self.segueOn()
+    }
         }
         
         alertController.addTextField {
@@ -185,16 +187,7 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
     }
     
-    
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-     // Pass the selected obje@objc ct to the new view controller.
-    }
-    */
     func segueOn() {
         
         print("NOTCED")

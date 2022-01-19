@@ -28,8 +28,21 @@ var isX = true
 var screenHeight:CGFloat = 25.0
 var is_edit_store_id = false
 
+//Audit Info
 var isInAudit:Bool = false
-var auditCode:String = "TBD"
+var auditCode:String = "TBD" //This is the auto generated audit name with store, date, branch
+var itemsScanned:Int = 0
+var itemsScannedCreated:Int = 0
+var auditHaveContentBarcodes:[String] = []
+var auditMissingPhotoBarcodes:[String] = []
+var isAllowDuplicateScan:Bool = false
+var currentAuditId:String = "TBD"
+var currentAuditName:String = "TBD"
+var currentAuditAddress:String = "TBD"
+var currentAuditBranchId:String = "TBD"
+var currentAuditStore:String = "TBD"
+var auditScanResults:String = "TBD"
+var isShowNextPhotoMessage:Bool = false
 
 
 //Scanning barcode variables
@@ -181,7 +194,7 @@ extension Date {
 
         let dateFormatter = DateFormatter()
 
-        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+        dateFormatter.dateFormat = "dd/MM/yyyy"
 
         return dateFormatter.string(from: Date())
 

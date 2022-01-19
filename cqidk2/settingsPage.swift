@@ -21,48 +21,62 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     var emailString = ""
     var orderHelper = 0
     
+    @IBOutlet weak var existingPhotosButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if isInAudit {
             self.auditButton.setTitle("End Audit", for: .normal)
         }
-        // Do any additional setup after loading the view.
+        
+        if isAllowDuplicateScan {
+            self.existingPhotosButton.setTitle("Block Existing Photos", for: .normal)
+        }
+
     }
     
     @IBOutlet weak var auditButton: UIButton!
     //All prompt function to input feedback
-    @IBAction func didTapChangeEmail(_ sender: UIButton) { //THIS IS NOW TEST!!!!!!
+    @IBAction func didTapChangeEmail(_ sender: UIButton) { //THIS IS NOW AUDIT!!!!!!
   
-        print("PRESSED")
-
         if isInAudit == true { //press to end the audit
-            
+
             isInAudit = false
             self.make_alert(title: "Audit Ended", message: "The audit has now ended")
             self.auditButton.setTitle("Begin Audit", for: .normal)
             self.orderHelper = 1
-            
+
         }
-        
+
         if isInAudit == false  { // press to begin audit
             if self.orderHelper == 0 {
                 isInAudit = true
-                let randomNum:UInt32 = arc4random_uniform(100)
-                let someString:String = String(randomNum)
-                auditCode = myCurrentStore + "Audit" + someString
-                self.make_alert(title: "Audit Began", message: "You are now in audit mode, select end audit to end this audit")
                 self.auditButton.setTitle("End Audit", for: .normal)
+                self.performSegue(withIdentifier: "settingsToSelectAudit", sender: nil)
+//                self.make_alert(title: "Audit Began", message: "You are now in audit mode, select end audit to end this audit")
+                
             }
-            
+
         }
                 
         
     }
     
-    @IBAction func didTapChangeName(_ sender: UIButton) {
+    @IBAction func didTapChangeName(_ sender: UIButton) { //Now this is the one for duplicate scan. ie even if it gets a match from the google sheet it still can take photo
         
-        self.settingsAlert(title: "Change Name", message: "Please enter your new name", placeHolder: "John Doe")
+        if isAllowDuplicateScan == true {
+            isAllowDuplicateScan = false
+            self.existingPhotosButton.setTitle("Allow Existing Photos", for: .normal)
+            print("now can duplicate scan")
+            self.make_alert(title: "Settings Changed", message: "You will now be able to photograph items which already have a photo in the catalog")
+        } else {
+            isAllowDuplicateScan = true
+            self.existingPhotosButton.setTitle("Block Existing Photos", for: .normal)
+            self.make_alert(title: "Settings Changed", message: "You will be blocked from taking photographs of items which already have a photo in the catalog")
+            print("now cannot duplicate scan")
+        }
+       
         
         
     }
@@ -98,8 +112,6 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
         databaseRef.child("photos").observe(.childAdded) { (snapshot2: DataSnapshot) in
               
               let snapshot2 = snapshot2.value as! NSDictionary
-                print("HEEERE")
-                print(snapshot2)
               let snapRecieveId = snapshot2["myId"] as? String
              // let snapComplete = snapshot2["isComplete"] as? Bool
               
@@ -259,3 +271,6 @@ func settingsAlert (title: String, message: String, placeHolder:String) {
     
 
 }
+
+
+
