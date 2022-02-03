@@ -606,8 +606,8 @@
                                     <constraint firstAttribute="width" constant="264" id="n6r-3a-u4r"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Save with Note">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Add Price">
+                                    <color key="titleColor" systemColor="systemRedColor"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -806,9 +806,9 @@
                                 <rect key="frame" x="0.0" y="161" width="414" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tdr-6d-6lR">
-                                        <rect key="frame" x="160.5" y="9.5" width="93" height="30"/>
+                                        <rect key="frame" x="142" y="9.5" width="130" height="30"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Send Photos">
+                                        <state key="normal" title="Refresh Barcodes">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -1245,7 +1245,7 @@
             <size key="intrinsicContentSize" width="146" height="34"/>
         </designable>
         <designable name="gmQ-0h-9RS">
-            <size key="intrinsicContentSize" width="129" height="34"/>
+            <size key="intrinsicContentSize" width="83" height="34"/>
         </designable>
         <designable name="gxi-fw-UBC">
             <size key="intrinsicContentSize" width="143" height="39"/>
@@ -1264,7 +1264,7 @@
         <segue reference="KZ0-If-Qog"/>
         <segue reference="IUb-Ho-wtL"/>
         <segue reference="LGG-IT-im4"/>
-        <segue reference="uIY-Ub-IkN"/>
+        <segue reference="LUT-3A-096"/>
         <segue reference="58K-YK-Wut"/>
         <segue reference="czO-oQ-vq2"/>
         <segue reference="Efn-RY-qkd"/>
@@ -1281,6 +1281,9 @@
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
             <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

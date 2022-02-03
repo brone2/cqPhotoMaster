@@ -106,7 +106,7 @@ class barcodeScanner: UIViewController {
                 textlayer.foregroundColor = UIColor.systemPink.cgColor
                 self.view.layer.addSublayer(textlayer) // caLayer is and instance of parent CALayer
                 //End Add text to direct to scan the barcode
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { //hide after 2 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { //hide after 2 seconds
                     textlayer.isHidden = true
                 }
                 isShowNextPhotoMessage = false
@@ -279,29 +279,37 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
             self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
         }
         
-        //TODO HERE !!!!!!!!!!!!!!!!
+        //TODO HERE !!!!!!!!!!!!!!!! Build out second sheet with variable weight items and store id
         else { //If identifying duplicate items
         
             if auditHaveContentBarcodes.contains(scannedBarcode) || auditHaveContentBarcodes.contains(adjustedPluCode)  {
                 print("Product in Integration Created")
-                auditScanResults = "In Integration - Already Has Photo"
+                auditScanResults = "Already Has Photo"
                 isShowNextPhotoMessage = true   //Prep Variable to show message to move to next item
                 self.scanningScript() //Move on to scan next item
                 
+//        //Change this to the variable weight sheet. THINK WE CAN IGNORE THIS BECAUSE THIS IS JUST NOT SOMETHING WERE GOING TO TRACK!!!!
+//            } else if auditMissingPhotoBarcodes.contains(scannedBarcode) || auditMissingPhotoBarcodes.contains(adjustedPluCode) { //set some value here to signify its in integratoin
+//                print("Product in Integration Not Created")
+//                auditScanResults = "In Integration - Did Not Have Photo"
+//                self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
                 
-            } else if auditMissingPhotoBarcodes.contains(scannedBarcode) || auditMissingPhotoBarcodes.contains(adjustedPluCode) { //set some value here to signify its in integratoin
-                print("Product in Integration Not Created")
-                auditScanResults = "In Integration - Did Not Have Photo"
-                self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
                 
             } else { //set some value here to signify its not in integratoin
                 print("Product not in Integration Not Created")
-                auditScanResults = "Not in Integration"
-                self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+                auditScanResults = "Does Not Have Photo"
+                
+                if isScanOnly == false {
+                    self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
+                } else {
+                    isShowNextPhotoMessage = true   //Prep Variable to show message to move to next item
+                    self.scanningScript() //Move on to scan next item
+                }
             }
             
-                    //Here save the audit values
-                    if isInAudit {
+                    //Here save the audit values. Actually save them all doesn't matter if its an audit or not
+//                    if isInAudit {
+                    
                         
                         let key = databaseRef.child("auditScans").childByAutoId().key!
                         
@@ -318,17 +326,20 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
                         let scanerUserIdPath = "/auditScans/\(key)/scanerUserId"
                         let auditBranchIdPath = "/auditScans/\(key)/auditBranchId"
                         let auditBranchAddressPath = "/auditScans/\(key)/auditBranchAddress"
+                        let adjustedPluCodePath = "/auditScans/\(key)/adjustedPluCode"
+                        let pluPricePath = "/auditScans/\(key)/pluPrice"
+                        let isVariableWeightPath = "/auditScans/\(key)/isVariableWeight"
                         
                         
                         
                         let childUpdates:Dictionary<String, Any> = [scanTimestamp:[".sv": "timestamp"],keyPath:key,scannedBarcodePath:scannedBarcode,auditScanResultsPath:auditScanResults,
                                                                       auditIdPath:currentAuditId,auditStorePath:myCurrentStore,auditNamePath:currentAuditName,countryPath:myCountry,scanDatePath:todayDate,scanerUserNamePath:myName,
-                                                                 scanerUserIdPath:loggedInUserId,auditBranchIdPath:currentAuditBranchId,auditBranchAddressPath:currentAuditAddress]
+                                                                 scanerUserIdPath:loggedInUserId,auditBranchIdPath:currentAuditBranchId,auditBranchAddressPath:currentAuditAddress,adjustedPluCodePath:adjustedPluCode,pluPricePath:pluPrice,isVariableWeightPath:isVariableWeight]
                         
                         databaseRef.updateChildValues(childUpdates)
                         
                         
-                    }
+//                    } //
         
     }
     }

@@ -115,7 +115,23 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
             myCurrentStore = self.buildingsNearMe[indexPath.row]?["store"] as! String
             
+         //Load the store id
+            if self.buildingsNearMe[indexPath.row]?["store_id"] as? String != nil {
+                myCurrentStoreId = self.buildingsNearMe[indexPath.row]?["store_id"] as! String
+            }
+            
+            
+            //Clear out all the barcodes because we need to reload the variable weight ones
+            auditHaveContentBarcodes = []
+            let ref = loadAuditBarcodes()
+            var my_vw_items_created = ref.gather_vw_items_have_content()
+            var my_bc_created = ref.gather_have_content_barcodes_first_80()
+            var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
+            
+            
+            
             print(myCurrentStore)
+            print(myCurrentStoreId)
             
             self.performSegue(withIdentifier: "selectStoreToMain", sender: nil)
         
@@ -238,12 +254,22 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             }
             
             let store_id = self.buildingNameEntered!
+                
+            myCurrentStoreId = self.buildingNameEntered!
             
             let childUpdates = ["/store/\(key)/store_id":store_id] as [String : Any]
             
             print(childUpdates)
+                
+            is_edit_store_id = false
             
             databaseRef.updateChildValues(childUpdates)
+                
+            auditHaveContentBarcodes = []
+            let ref = loadAuditBarcodes()
+            var my_vw_items_created = ref.gather_vw_items_have_content()
+            var my_bc_created = ref.gather_have_content_barcodes_first_80()
+            var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
             
             self.segueOn()
  

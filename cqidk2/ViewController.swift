@@ -16,6 +16,7 @@ var autoLoginHelp: Int = 0
 
 //General User info
 var myCurrentStore:String = "notSelected"
+var myCurrentStoreId:String = "TBD"
 var myCountry:String = "notSelected"
 var todayDate:String = String(Date.getCurrentDate())
 var myName:String = "TBD"
@@ -30,6 +31,7 @@ var is_edit_store_id = false
 
 //Audit Info
 var isInAudit:Bool = false
+var isScanOnly:Bool = false
 var auditCode:String = "TBD" //This is the auto generated audit name with store, date, branch
 var itemsScanned:Int = 0
 var itemsScannedCreated:Int = 0
@@ -82,6 +84,16 @@ class ViewController: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.startTimer), userInfo: nil, repeats: true)
         
         print("Hello big dog!")
+        
+    //This is also an option to select in settings, so need to update there as well
+        
+//        //This is not needed because the barcodes will load fully when store is selected
+//        let ref = loadAuditBarcodes()
+//        var my_bc_created = ref.gather_have_content_barcodes_first_80()
+//        var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
+//        var my_bc_not_created = ref.gather_vw_items_have_content()
+//        print(auditHaveContentBarcodes.count)
+        
     }
     
     func checkModel()  {
@@ -123,7 +135,7 @@ class ViewController: UIViewController {
             
             if autoLoginHelp == 0 {
                 
-        print(user)
+            print(user)
      
             if user != nil {
                 

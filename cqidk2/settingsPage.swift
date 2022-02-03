@@ -91,6 +91,13 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBAction func didTapReportAbuse(_ sender: UIButton) {
         
+        if isScanOnly {
+            isScanOnly = false
+        } else {
+            isScanOnly = true
+        }
+        
+        
         self.settingsAlert(title: "Report Abuse", message: "Please provide specifics of the issue", placeHolder: "")
         
         
@@ -124,7 +131,18 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
   
         
     }
+    
+    //Initially was to send photos, turning this into reload barcodes
     @IBAction func didTapPhotoRequest(_ sender: UIButton) {
+        
+        
+        
+        //Clear out all the barcodes because we need to reload the variable weight ones
+        auditHaveContentBarcodes = []
+        let ref = loadAuditBarcodes()
+        var my_vw_items_created = ref.gather_vw_items_have_content()
+        var my_bc_created = ref.gather_have_content_barcodes_first_80()
+        var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
             
 //        databaseRef.child("photos").observe(.childAdded) { (snapshot2: DataSnapshot) in
 //
@@ -139,33 +157,33 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
 //              }
 //
 //          }
-        
-        print(self.myPastRecieve)
-        
-        for v in self.myPastRecieve {
-            let photoUrl = v!["photoUrl"] as! String
-            let scannedBarcode = v!["scannedBarcode"] as! String
-            let photoNote = v!["photoNote"] as! String
-            let store = v!["store"] as! String
-            
-            print(emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote)
-            emailString = emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote + "-" + store
-        }
-        print(emailString)
-        
-        
-        
-        //Send Email
-        let composeVC = MFMailComposeViewController()
-        composeVC.mailComposeDelegate = self
-
-        // Configure the fields of the interface.
-        composeVC.setToRecipients([myEmail])
-        composeVC.setSubject("Photoshoot Results")
-        composeVC.setMessageBody(emailString, isHTML: false)
-
-        // Present the view controller modally.
-        self.present(composeVC, animated: true, completion: nil)
+//
+//        print(self.myPastRecieve)
+//
+//        for v in self.myPastRecieve {
+//            let photoUrl = v!["photoUrl"] as! String
+//            let scannedBarcode = v!["scannedBarcode"] as! String
+//            let photoNote = v!["photoNote"] as! String
+//            let store = v!["store"] as! String
+//
+//            print(emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote)
+//            emailString = emailString + "," + photoUrl + "-" + scannedBarcode + "-" + photoNote + "-" + store
+//        }
+//        print(emailString)
+//
+//
+//
+//        //Send Email
+//        let composeVC = MFMailComposeViewController()
+//        composeVC.mailComposeDelegate = self
+//
+//        // Configure the fields of the interface.
+//        composeVC.setToRecipients([myEmail])
+//        composeVC.setSubject("Photoshoot Results")
+//        composeVC.setMessageBody(emailString, isHTML: false)
+//
+//        // Present the view controller modally.
+//        self.present(composeVC, animated: true, completion: nil)
         
         
         

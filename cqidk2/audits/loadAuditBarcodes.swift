@@ -17,7 +17,9 @@ class loadAuditBarcodes: UIViewController {
 
     }
     
-    func gather_have_content_barcodes (){
+    
+    //First 88k barcodes
+    func gather_have_content_barcodes_first_80 (){
         
         let have_content_integration_url = URL(string: "https://sheet.best/api/sheets/4b104909-e4e6-4bbb-b375-c0df2b7e1f61")!
 
@@ -38,14 +40,15 @@ class loadAuditBarcodes: UIViewController {
                 } //let frontIndex = str.index(of: ":") {
             }
         }
+        print("complete first 80")
         task.resume()
     }
     
-    func gather_missing_photos_barcodes (){
+    func gather_have_content_barcodes_80_160 (){
         
-        let missing_photo_url = URL(string: "https://sheet.best/api/sheets/d0ff3700-cb6b-44c0-8e01-69301bc4ffbc")!
+        let have_content_integration_url_80_60 = URL(string: "https://sheet.best/api/sheets/4b453c9b-21ec-4dd3-ad40-909f239a4540")!
 
-        let task = URLSession.shared.dataTask(with: missing_photo_url) {(data, response, error) in
+        let task = URLSession.shared.dataTask(with: have_content_integration_url_80_60) {(data, response, error) in
             guard let data = data else { return }
             let data2 = String(data: data, encoding: .utf8)!
             let split_data2 = data2.components(separatedBy: ",")
@@ -56,14 +59,55 @@ class loadAuditBarcodes: UIViewController {
                         let upcValue = subString.replacingOccurrences(of: "\"", with: "")
                         let upcValueInt = Int(upcValue)
                         let upcValueString = "a\(upcValueInt!)"
-                        auditMissingPhotoBarcodes.append(upcValueString)
-//                        print(auditMissingPhotoBarcodes)
+                        auditHaveContentBarcodes.append(upcValueString)
+//                        print(auditHaveContentBarcodes)
                     } //if let frontIndex = str.index(of: ":") {
                 } //let frontIndex = str.index(of: ":") {
             }
         }
+        
+        print("complete  80 -  160")
+        
         task.resume()
     }
+    
+    
+    
+    
+    // Make this variable weight barcodes
+    //ToDo Need to filter on store, so need to load this after store is selected
+    //https://metabase.internal.cornershop.io/question/30838-vw-items-have-content
+//    func gather_missing_photos_barcodes (){
+    func gather_vw_items_have_content (){
+        
+        let variable_weight_url = URL(string: "https://sheet.best/api/sheets/956ea209-12c3-46af-ba50-db0927679e62")!
+
+        let task = URLSession.shared.dataTask(with: variable_weight_url) {(data, response, error) in
+            guard let data = data else { return }
+            let data2 = String(data: data, encoding: .utf8)!
+            let split_data2 = data2.components(separatedBy: ",")
+            
+            for str in split_data2 {
+                let myCurrentStoreIdAssist = myCurrentStoreId + "a"
+                if str.range(of: String(myCurrentStoreIdAssist)) != nil {
+                    if let frontIndex = str.endIndex(of: "a") { // get after that character is found
+                        if let backIndex = str.index(of: "}") {
+                            let subString = str[frontIndex..<backIndex]
+                            let upcValue = subString.replacingOccurrences(of: "\"", with: "")
+                            let upcValueInt = Int(upcValue)
+                            print(upcValueInt)
+                            let upcValueString = "a\(upcValueInt!)"
+                            auditHaveContentBarcodes.append(upcValueString)
+                        } //if let frontIndex = str.index(of: ":") {
+                    } //let frontIndex = str.index(of: ":") {
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    
+    
 }
 
 

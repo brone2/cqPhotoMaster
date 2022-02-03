@@ -34,12 +34,22 @@ class finishPhoto: UIViewController {
         self.productImage.image = UIImage(data: data!)
         self.barcodeLabel.text = rawBarcode
         
+        //hack for target
+        print("length here")
+        print(photoNote.count)
+        
     }
     
     @IBAction func didTapSaveDirect(_ sender: customButton) {
         
-        saveItem()
+        //hack for target to ensure price is added
+        if myCurrentStore == "Target" && photoNote.count == 0 {
+            make_alert(title: "No Price", message: "Please add price before saving")
+        } else {
         
+            saveItem()
+        
+        }
     }
     
     @IBAction func didTapSaveAsDeliItem(_ sender: customButton) {

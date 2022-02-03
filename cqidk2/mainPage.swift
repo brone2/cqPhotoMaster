@@ -31,15 +31,22 @@ class mainPage: UIViewController {
         
         self.photoShootIdLabel.text = myPhotoShootKey
         
+        //Moving to didLoad because don't want to duplicate the append each time
         //load audit info
-        let ref = loadAuditBarcodes()
-        var my_bc_created = ref.gather_have_content_barcodes()
-        var my_bc_not_created = ref.gather_missing_photos_barcodes()
+//        let ref = loadAuditBarcodes()
+//        var my_bc_created = ref.gather_have_content_barcodes_first_80()
+//        var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
+//        var my_bc_not_created = ref.gather_missing_photos_barcodes()
+        print(auditHaveContentBarcodes.count)
+        
+     
         
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+ 
 
     }
     
