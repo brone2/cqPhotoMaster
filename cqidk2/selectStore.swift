@@ -120,16 +120,19 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                 myCurrentStoreId = self.buildingsNearMe[indexPath.row]?["store_id"] as! String
             }
             
+            //Check if is albertsons
+            if albertsonStoreIdList.firstIndex(of: myCurrentStoreId) != nil {
+                isAlbertsonsStore = true
+            } else {
+                isAlbertsonsStore = false
+            }
             
             //Clear out all the barcodes because we need to reload the variable weight ones
             auditHaveContentBarcodes = []
+            print(myCurrentStoreId)
             let ref = loadAuditBarcodes()
+            var my_all_bc = ref.gather_all_have_content_barcodes()
             var my_vw_items_created = ref.gather_vw_items_have_content()
-            var my_bc_created = ref.gather_have_content_barcodes_first_80()
-            var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
-            
-            
-            
             print(myCurrentStore)
             print(myCurrentStoreId)
             
@@ -267,9 +270,9 @@ class selectStore: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                 
             auditHaveContentBarcodes = []
             let ref = loadAuditBarcodes()
+            var my_all_bc = ref.gather_all_have_content_barcodes()
             var my_vw_items_created = ref.gather_vw_items_have_content()
-            var my_bc_created = ref.gather_have_content_barcodes_first_80()
-            var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
+                
             
             self.segueOn()
  

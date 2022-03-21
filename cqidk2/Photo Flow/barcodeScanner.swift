@@ -267,19 +267,21 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
         scannedBarcode = "a" + scannedBarcode
         
         //IN AUDIT HERE DO THE CHECK IF THE PRODUCT IS IN CATALOG
-        print(scannedBarcode)
+        
         print(isVariableWeight)
         print(adjustedPluCode)
         print(pluCode)
         print(pluPrice)
+        print(scannedBarcode)
         photoViewDismissHelper = 1
+        
         
         //Perform Audit Related Logic
         if isAllowDuplicateScan { //always move on to take photo stage
             self.performSegue(withIdentifier: "barcodeScanningToTakePhoto", sender: nil)
         }
         
-        //TODO HERE !!!!!!!!!!!!!!!! Build out second sheet with variable weight items and store id
+
         else { //If identifying duplicate items
         
             if auditHaveContentBarcodes.contains(scannedBarcode) || auditHaveContentBarcodes.contains(adjustedPluCode)  {
@@ -307,39 +309,37 @@ extension barcodeScanner : AVCaptureMetadataOutputObjectsDelegate {
                 }
             }
             
-                    //Here save the audit values. Actually save them all doesn't matter if its an audit or not
-//                    if isInAudit {
-                    
+        //Here save the audit values. Actually save them all doesn't matter if its an audit or not
+        //Apparently it doesn't matter that the segue is above this it still loads i guess
+
+                let key = databaseRef.child("auditScans").childByAutoId().key!
+                
+                let scanTimestamp = "/auditScans/\(key)/timestamp"
+                let keyPath = "/auditScans/\(key)/key"
+                let scannedBarcodePath = "/auditScans/\(key)/scannedBarcode"
+                let auditScanResultsPath = "/auditScans/\(key)/auditScanResults"
+                let auditIdPath = "/auditScans/\(key)/auditId"
+                let auditStorePath = "/auditScans/\(key)/auditStore"
+                let auditNamePath = "/auditScans/\(key)/auditCode"
+                let countryPath = "/auditScans/\(key)/country"
+                let scanDatePath = "/auditScans/\(key)/scanDate"
+                let scanerUserNamePath = "/auditScans/\(key)/scanerUserName"
+                let scanerUserIdPath = "/auditScans/\(key)/scanerUserId"
+                let auditBranchIdPath = "/auditScans/\(key)/auditBranchId"
+                let auditBranchAddressPath = "/auditScans/\(key)/auditBranchAddress"
+                let adjustedPluCodePath = "/auditScans/\(key)/adjustedPluCode"
+                let pluPricePath = "/auditScans/\(key)/pluPrice"
+                let isVariableWeightPath = "/auditScans/\(key)/isVariableWeight"
+                
+                
+                
+                let childUpdates:Dictionary<String, Any> = [scanTimestamp:[".sv": "timestamp"],keyPath:key,scannedBarcodePath:scannedBarcode,auditScanResultsPath:auditScanResults,
+                                                              auditIdPath:currentAuditId,auditStorePath:myCurrentStore,auditNamePath:currentAuditName,countryPath:myCountry,scanDatePath:todayDate,scanerUserNamePath:myName,
+                                                         scanerUserIdPath:loggedInUserId,auditBranchIdPath:currentAuditBranchId,auditBranchAddressPath:currentAuditAddress,adjustedPluCodePath:adjustedPluCode,pluPricePath:pluPrice,isVariableWeightPath:isVariableWeight]
+                
+                databaseRef.updateChildValues(childUpdates)
                         
-                        let key = databaseRef.child("auditScans").childByAutoId().key!
-                        
-                        let scanTimestamp = "/auditScans/\(key)/timestamp"
-                        let keyPath = "/auditScans/\(key)/key"
-                        let scannedBarcodePath = "/auditScans/\(key)/scannedBarcode"
-                        let auditScanResultsPath = "/auditScans/\(key)/auditScanResults"
-                        let auditIdPath = "/auditScans/\(key)/auditId"
-                        let auditStorePath = "/auditScans/\(key)/auditStore"
-                        let auditNamePath = "/auditScans/\(key)/auditCode"
-                        let countryPath = "/auditScans/\(key)/country"
-                        let scanDatePath = "/auditScans/\(key)/scanDate"
-                        let scanerUserNamePath = "/auditScans/\(key)/scanerUserName"
-                        let scanerUserIdPath = "/auditScans/\(key)/scanerUserId"
-                        let auditBranchIdPath = "/auditScans/\(key)/auditBranchId"
-                        let auditBranchAddressPath = "/auditScans/\(key)/auditBranchAddress"
-                        let adjustedPluCodePath = "/auditScans/\(key)/adjustedPluCode"
-                        let pluPricePath = "/auditScans/\(key)/pluPrice"
-                        let isVariableWeightPath = "/auditScans/\(key)/isVariableWeight"
-                        
-                        
-                        
-                        let childUpdates:Dictionary<String, Any> = [scanTimestamp:[".sv": "timestamp"],keyPath:key,scannedBarcodePath:scannedBarcode,auditScanResultsPath:auditScanResults,
-                                                                      auditIdPath:currentAuditId,auditStorePath:myCurrentStore,auditNamePath:currentAuditName,countryPath:myCountry,scanDatePath:todayDate,scanerUserNamePath:myName,
-                                                                 scanerUserIdPath:loggedInUserId,auditBranchIdPath:currentAuditBranchId,auditBranchAddressPath:currentAuditAddress,adjustedPluCodePath:adjustedPluCode,pluPricePath:pluPrice,isVariableWeightPath:isVariableWeight]
-                        
-                        databaseRef.updateChildValues(childUpdates)
-                        
-                        
-//                    } //
+
         
     }
     }

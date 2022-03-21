@@ -45,6 +45,8 @@ var currentAuditBranchId:String = "TBD"
 var currentAuditStore:String = "TBD"
 var auditScanResults:String = "TBD"
 var isShowNextPhotoMessage:Bool = false
+var albertsonStoreIdList = ["11012","5553","8988","8987","11043","11009","5555","11044","11010","11011","5554","11186","12693","12855","13006"]
+var isAlbertsonsStore = false
 
 
 //Scanning barcode variables
@@ -145,6 +147,10 @@ class ViewController: UIViewController {
                 //get user name
                 databaseRef.child("users").child(loggedInUserId).observeSingleEvent(of: .value) { (snapshot:DataSnapshot) in
                     self.loggedInUserData = snapshot.value as? NSDictionary
+                    
+                    databaseRef.child("audit").observe(.childAdded) { (snapshot: DataSnapshot) in
+                        //TEST HERE IF THIS WILL SPEED IT UP LATER
+                    }
                     
                     if self.loggedInUserData?["myName"] as? String == nil  {
                         try! Auth.auth().signOut()

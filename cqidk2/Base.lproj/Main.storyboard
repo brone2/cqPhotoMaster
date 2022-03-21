@@ -807,8 +807,11 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tdr-6d-6lR">
                                         <rect key="frame" x="142" y="9.5" width="130" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="FN7-63-Vew"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Refresh Barcodes">
+                                        <state key="normal" title="Scan Only">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -950,6 +953,7 @@
                     <connections>
                         <outlet property="auditButton" destination="kx6-Do-0O7" id="Ll6-oT-lo0"/>
                         <outlet property="existingPhotosButton" destination="H4x-mm-Sv7" id="UAz-Z2-T48"/>
+                        <outlet property="scanOnlyButton" destination="Tdr-6d-6lR" id="RN4-Wt-2ek"/>
                         <segue destination="hhj-yw-KyK" kind="presentation" identifier="settingsToChangeCountry" modalPresentationStyle="fullScreen" id="Efn-RY-qkd"/>
                         <segue destination="f1j-iX-HV1" kind="presentation" identifier="settingsToSelectStore" id="czO-oQ-vq2"/>
                         <segue destination="nbw-4N-Dgl" kind="presentation" identifier="settingsToNewAudit" modalPresentationStyle="fullScreen" id="KZ0-If-Qog"/>

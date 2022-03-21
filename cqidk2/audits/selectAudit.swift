@@ -24,7 +24,8 @@ class selectAudit: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-       
+        
+
         if isX == false{
                 for constraint in self.view.constraints {
                     if constraint.identifier == "toolBarConstraint" {
@@ -35,10 +36,8 @@ class selectAudit: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
         
         
-        
-        print("on audit table page")
         databaseRef.child("audit").observe(.childAdded) { (snapshot: DataSnapshot) in
-        
+
         let snapshot = snapshot.value as! NSDictionary
             
         let country = snapshot["country"] as? String

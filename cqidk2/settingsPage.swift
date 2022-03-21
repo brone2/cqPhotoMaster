@@ -22,6 +22,8 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     var orderHelper = 0
     
     @IBOutlet weak var existingPhotosButton: UIButton!
+    @IBOutlet weak var scanOnlyButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,15 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
         if isAllowDuplicateScan {
             self.existingPhotosButton.setTitle("Block Existing Photos", for: .normal)
         }
+        
+        if isScanOnly {
+            self.scanOnlyButton.setTitle("End Scan Only", for: .normal)
+        }
+        
+        
+        
+        
+        
 
     }
     
@@ -91,12 +102,7 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBAction func didTapReportAbuse(_ sender: UIButton) {
         
-        if isScanOnly {
-            isScanOnly = false
-        } else {
-            isScanOnly = true
-        }
-        
+  
         
         self.settingsAlert(title: "Report Abuse", message: "Please provide specifics of the issue", placeHolder: "")
         
@@ -132,17 +138,29 @@ class settingsPage: UIViewController, MFMailComposeViewControllerDelegate {
         
     }
     
-    //Initially was to send photos, turning this into reload barcodes
+    //Initially was to send photos, turning this into scan only, and will also reload barcodes which at one point this was
     @IBAction func didTapPhotoRequest(_ sender: UIButton) {
         
+        if isScanOnly {
+            isScanOnly = false
+            self.scanOnlyButton.setTitle("Scan Only", for: .normal)
+            self.make_alert(title: "Settings Changed", message: "You will now be prompted to take a photo when the item is not recognized")
+        } else {
+            isScanOnly = true
+            self.scanOnlyButton.setTitle("End Scan Only", for: .normal)
+            self.make_alert(title: "Settings Changed", message: "You will not be prompted to take a photo when the item is not recognized")
+        }
         
         
         //Clear out all the barcodes because we need to reload the variable weight ones
         auditHaveContentBarcodes = []
         let ref = loadAuditBarcodes()
+        var load_all_bc = ref.gather_all_have_content_barcodes()
         var my_vw_items_created = ref.gather_vw_items_have_content()
-        var my_bc_created = ref.gather_have_content_barcodes_first_80()
-        var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
+        
+
+//        var my_bc_created = ref.gather_have_content_barcodes_first_80()
+//        var my_bc_created_80_160 = ref.gather_have_content_barcodes_80_160()
             
 //        databaseRef.child("photos").observe(.childAdded) { (snapshot2: DataSnapshot) in
 //
